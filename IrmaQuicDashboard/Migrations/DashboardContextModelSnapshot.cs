@@ -99,7 +99,7 @@ namespace IrmaQuicDashboard.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("IrmaSessionId");
+                    b.Property<Guid>("IrmaSessionId");
 
                     b.Property<double>("Latitude");
 
@@ -142,7 +142,8 @@ namespace IrmaQuicDashboard.Migrations
                 {
                     b.HasOne("IrmaQuicDashboard.Models.Entities.IrmaSession")
                         .WithMany("TimestampedLocations")
-                        .HasForeignKey("IrmaSessionId");
+                        .HasForeignKey("IrmaSessionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

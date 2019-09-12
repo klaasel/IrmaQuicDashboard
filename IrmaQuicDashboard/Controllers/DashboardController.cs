@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IrmaQuicDashboard.Logic;
+using IrmaQuicDashboard.Models.Entities;
+using IrmaQuicDashboard.Models.Enums;
 using IrmaQuicDashboard.Models.ViewModels;
 using IrmaQuicDashboard.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +24,7 @@ namespace IrmaQuicDashboard.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            var viewModel = new DashboardViewModel();
+            var viewModel = new SelectUploadSessionViewModel();
             // get all possible sessions for dropdown
             var sessions = _repository.GetUploadSessions();
             viewModel.SessionSelection =
@@ -36,10 +39,46 @@ namespace IrmaQuicDashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Dashboard(Guid uploadSessionMetadataId)
+        public IActionResult UploadSession(SessionFilterViewModel filter)
         {
-            var irmaSessions = "test";
-            return PartialView("_DashboardPartial");
+            var uploadSession = _repository.GetUploadSession(filter.Id);
+            var dashboardVM = MapUploadSessionToViewModel(uploadSession);
+            return PartialView("_DashboardPartial", dashboardVM);
         }
+
+
+        #region Helpers
+
+        private DashboardViewModel MapUploadSessionToViewModel(SessionUploadMetadata uploadSession)
+        {
+            var dashboardVM = new DashboardViewModel();
+            dashboardVM.SessionNumber = uploadSession.SessionNumber;
+            dashboardVM.UploadSessionDate = uploadSession.Date;
+            dashboardVM.Location = uploadSession.Location;
+            dashboardVM.Description = uploadSession.Description;
+            dashboardVM.UsesQuic = uploadSession.UsesQuic;
+
+            // calculate fields of IrmaSessions
+            dashboardVM.IrmaSessions = uploadSession.IrmaSessions.Select
+            (irmaSession => new IrmaSessionViewModel()
+            {
+                AppSessionId = irmaSession.AppSessionId,
+                StartTime = irmaSession.Timestamp.ToLongTimeString(),
+                Location = DashboardLogic.CalculateLocationBasedOnTimestamp(irmaSession.Timestamp, irmaSession.TimestampedLocations),
+                NewSessionToRequestIssuanceDelta = DashboardLogic.CalculateNewSessionToRequestIssuanceDelta(irmaSession.AppLogEntries),
+                RespondToSuccessDelta = DashboardLogic.CalculateRespondToSuccessDeltaDelta(irmaSession.AppLogEntries),
+            }).ToList();
+
+            // calculate averages
+            dashboardVM.AverageDeltaNewSessionToRequestIssuance = dashboardVM.IrmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average();
+            dashboardVM.AverageDeltaRespondToSuccess = dashboardVM.IrmaSessions.Select(i => i.RespondToSuccessDelta).Average();
+
+            return dashboardVM;
+        }
+
+        
+
+        #endregion
     }
+
 }

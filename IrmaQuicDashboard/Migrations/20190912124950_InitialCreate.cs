@@ -15,7 +15,8 @@ namespace IrmaQuicDashboard.Migrations
                     Date = table.Column<DateTime>(nullable: false),
                     SessionNumber = table.Column<int>(nullable: false),
                     Location = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
+                    Description = table.Column<string>(nullable: true),
+                    UsesQuic = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,10 +90,10 @@ namespace IrmaQuicDashboard.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    IrmaSessionId = table.Column<Guid>(nullable: false),
                     Latitude = table.Column<double>(nullable: false),
                     Longitude = table.Column<double>(nullable: false),
-                    Timestamp = table.Column<DateTime>(nullable: false),
-                    IrmaSessionId = table.Column<Guid>(nullable: true)
+                    Timestamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,7 +103,7 @@ namespace IrmaQuicDashboard.Migrations
                         column: x => x.IrmaSessionId,
                         principalTable: "IrmaSessions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

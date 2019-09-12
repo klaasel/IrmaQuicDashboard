@@ -24,5 +24,6 @@
     <Folder Include="Repository\" />
     <Folder Include="Extensions\" />
     <Folder Include="Views\Dashboard\" />
+    <Folder Include="Logic\" />
   </ItemGroup>
 </Project>

@@ -41,6 +41,9 @@ namespace IrmaQuicDashboard.Repository
             // convert the logs
             success = ConvertAndSaveAppLog(applog, sessionMetadata.Id);
             success = ConvertAndSaveServerLog(serverLog);
+
+            // reset the currentIrmaSession
+            _currentIrmaSession = null;
             return success;
         }
 
@@ -54,8 +57,6 @@ namespace IrmaQuicDashboard.Repository
                 {
                     var line = reader.ReadLine();
                     ProcessAppLogLine(line, sessionMetadataId);
-
-                    
                 }
             }
             return true;
@@ -69,7 +70,8 @@ namespace IrmaQuicDashboard.Repository
 
         private bool ProcessAppLogLine(string line, Guid sessionMetadataId)
         {
-            if (line.Contains("Position"))
+            // only process Position if a session is active
+            if (line.Contains("Position") && _currentIrmaSession != null)
             {
                 ProcessTimestampedLocation(line);
             }
@@ -107,6 +109,7 @@ namespace IrmaQuicDashboard.Repository
                 throw new ArgumentException(nameof(lineParts));
 
             // assign
+            timestampedLocation.IrmaSessionId = _currentIrmaSession.Id;
             timestampedLocation.Timestamp = DateTime.Parse(lineParts[0].Trim('[').Trim(']'));
             timestampedLocation.Latitude = Double.Parse(coords[0]);
             timestampedLocation.Longitude = Double.Parse(coords[1]);

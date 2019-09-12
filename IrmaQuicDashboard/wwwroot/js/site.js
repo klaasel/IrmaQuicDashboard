@@ -3,5 +3,29 @@
 
 // Write your JavaScript code.
 $('#btnViewUploadSession').on('click', function (e) {
-alert();
+    var filter = {
+        id: $('#dropdownSelectSession').val()
+       
+        };
+     
+    GetDashboard(filter)
 });
+
+
+function GetDashboard(filter) {
+    $.ajax({
+        url: '/Dashboard/UploadSession',
+        type: 'POST',
+        cache: false,
+        async: true,
+        dataType: "html",
+        data : filter
+    })
+    .done(function (result) {
+        $('#dashboard').html(result);
+        }
+    ).fail(function (xhr) {
+        console.log('error : ' + xhr.status + ' - ' + xhr.statusText + ' - ' + xhr.responseText);
+        });
+
+}

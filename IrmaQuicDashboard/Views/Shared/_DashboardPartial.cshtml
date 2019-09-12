@@ -1,5 +1,90 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
 }
+@model IrmaQuicDashboard.Models.ViewModels.DashboardViewModel
+
+<hr />
+<div class="p-1"></div>
+<div class="p-1">
+    <div>
+        <label asp-for="UploadSessionDate"></label>
+        @Html.DisplayFor(model => model.UploadSessionDate)
+    </div>
+    <div>
+        <label asp-for="SessionNumber"></label>
+        @Html.DisplayFor(model => model.SessionNumber)
+    </div>
+    <div>
+        <label asp-for="Location"></label>
+        @Html.DisplayFor(model => model.Location)
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        @Html.DisplayFor(model => model.Description)
+    </div>
+    <div>
+        <label asp-for="UsesQuic"></label>
+        @Html.DisplayFor(model => model.UsesQuic)
+    </div>
+    <div>
+        <label>Average NewSession To Request Issuance</label>
+        @Html.DisplayFor(model => model.AverageDeltaNewSessionToRequestIssuance)
+    </div>
+    <div>
+        <label>Average Respond To Success</label>
+        @Html.DisplayFor(model => model.AverageDeltaRespondToSuccess)
+    </div>
+
+
+    <table class="table">
+        <tr>
+            <th>SessionId</th>
+            <th>StartTime</th>
+            <th>Location</th>
+            <th>New-Rip</th>
+            <th>Res-Suc</th>
+            <th>New-SERV</th>
+            <th>SERV-RIP</th>
+            <th>Res-SERV</th>
+            <th>SERV-Suc</th>
+        </tr>
+        @foreach (var session in Model.IrmaSessions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => session.AppSessionId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => session.StartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => session.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => session.NewSessionToRequestIssuanceDelta)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => session.RespondToSuccessDelta)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => session.NewSessionToServerLogDelta)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => session.ServerLogToRequestIssuanceDelta)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => session.RespondToServerLogDelta)
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => session.ServerLogToSuccessDelta)
+
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div class="p-1"></div>

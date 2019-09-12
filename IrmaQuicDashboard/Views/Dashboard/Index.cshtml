@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
 }
-@model IrmaQuicDashboard.Models.ViewModels.DashboardViewModel
+@model IrmaQuicDashboard.Models.ViewModels.SelectUploadSessionViewModel
 
 <div class="text-center">
     <h1 class="display-4">Dashboard</h1>
@@ -10,27 +10,15 @@
     <div class="p-1"></div>
     <div class="p-1">
         <h3>Choose session:</h3>
-        <form>
-            <select asp-for="UploadSessionId" asp-items="@Model.SessionSelection">
+        <form method="get" action="Dashboard">
+            <select id="dropdownSelectSession" asp-for="UploadSessionId" asp-items="@Model.SessionSelection">
                 <option>Please select one</option>
             </select>
             <input id="btnViewUploadSession" type="button" class="btn btn-primary" value="View Session" />
         </form>
-
-
-        @*<h2>Irma server log (app)</h2>
-        <form method="post" asp-action="CreateLog" enctype="multipart/form-data">
-            Date of session: <input asp-for="Date" /><br>
-            Session number of this day: <input asp-for="SessionNumberUploaded" /><br>
-            General location: <input asp-for="Location" /><br>
-            Description: <input asp-for="Description" /><br>
-            Uses QUIC?: <input asp-for="UsesQuic" /><br>
-            App log: <input asp-for="AppLog" multiple /><br>
-            Server log: <input asp-for="ServerLog" multiple /><br>
-            <input type="submit" />
-        </form>*@
     </div>
     <div class="p-1"></div>
 </div>
+<div id="dashboard" class="d-flex justify-content-between"></div>
 
 <script src="~/js/site.js"></script>

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IrmaQuicDashboard.Migrations
 {
     [DbContext(typeof(DashboardContext))]
-    [Migration("20190911143715_InitialCreate")]
+    [Migration("20190912124950_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,6 +89,8 @@ namespace IrmaQuicDashboard.Migrations
 
                     b.Property<int>("SessionNumber");
 
+                    b.Property<bool>("UsesQuic");
+
                     b.HasKey("Id");
 
                     b.ToTable("SessionUploadMetadatas");
@@ -99,7 +101,7 @@ namespace IrmaQuicDashboard.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("IrmaSessionId");
+                    b.Property<Guid>("IrmaSessionId");
 
                     b.Property<double>("Latitude");
 
@@ -142,7 +144,8 @@ namespace IrmaQuicDashboard.Migrations
                 {
                     b.HasOne("IrmaQuicDashboard.Models.Entities.IrmaSession")
                         .WithMany("TimestampedLocations")
-                        .HasForeignKey("IrmaSessionId");
+                        .HasForeignKey("IrmaSessionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
