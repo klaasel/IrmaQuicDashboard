@@ -4,14 +4,14 @@
 @model IrmaQuicDashboard.Models.ViewModels.IrmaLogSessionUploadViewModel
 
 <div class="text-center">
-    <h1 class="display-4">Irma Log Sessions Upload</h1>
-    <p>Upload your sessions here.</p>
+    <h1 class="display-4">Sessions Upload</h1>
+    <p>Upload your sessions here, which will consist of multiple Irma Sessions in an app and corresponding server log file.</p>
 </div>
 
 <div class="d-flex justify-content-between">
     <div class="p-1"></div>
     <div class="p-1">
-        <h2>Irma server log (app)</h2>
+
         <form method="post" asp-action="CreateLog" enctype="multipart/form-data">
             Date of session: <input asp-for="Date" /><br>
             Session number of this day: <input asp-for="SessionNumberUploaded" /><br>
