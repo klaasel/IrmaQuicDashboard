@@ -36,7 +36,7 @@ namespace IrmaQuicDashboard
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDbContext<DashboardContext>(options => options.UseSqlite("Data Source=dashboard.db"));
+            services.AddDbContext<DashboardContext>();
             services.AddScoped(typeof(ILogEntriesRepository), typeof(LogEntriesRepository));
             services.AddScoped(typeof(IDashboardRepository), typeof(DashboardRepository));
         }
@@ -53,6 +53,12 @@ namespace IrmaQuicDashboard
                 app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+
+                // On release, perform migrations
+                using (var context = new DashboardContext())
+                {
+                    context.Database.Migrate();
+                }
             }
 
             app.UseHttpsRedirection();
@@ -65,6 +71,8 @@ namespace IrmaQuicDashboard
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            
         }
     }
 }

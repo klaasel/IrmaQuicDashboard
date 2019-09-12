@@ -6,7 +6,11 @@ namespace IrmaQuicDashboard.Models
 {
     public class DashboardContext : DbContext
     {
-        public DashboardContext(DbContextOptions<DashboardContext> options) : base(options) { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Data Source=dashboard.db");
+        }
 
         public DbSet<IrmaSession> IrmaSessions { get; set; }
         public DbSet<IrmaAppLogEntry> AppLogEntries { get; set; }
