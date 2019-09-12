@@ -1,17 +1,24 @@
 ﻿@{
-    ViewData["Title"] = "Upload";
+    ViewData["Title"] = "Dashboard";
 }
-@model IrmaQuicDashboard.Models.ViewModels.IrmaLogSessionUploadViewModel
+@model IrmaQuicDashboard.Models.ViewModels.DashboardViewModel
 
 <div class="text-center">
-    <h1 class="display-4">Irma Log Sessions Upload</h1>
-    <p>Upload your sessions here.</p>
+    <h1 class="display-4">Dashboard</h1>
 </div>
-
 <div class="d-flex justify-content-between">
     <div class="p-1"></div>
     <div class="p-1">
-        <h2>Irma server log (app)</h2>
+        <h3>Choose session:</h3>
+        <form>
+            <select asp-for="UploadSessionId" asp-items="@Model.SessionSelection">
+                <option>Please select one</option>
+            </select>
+            <input id="btnViewUploadSession" type="button" class="btn btn-primary" value="View Session" />
+        </form>
+
+
+        @*<h2>Irma server log (app)</h2>
         <form method="post" asp-action="CreateLog" enctype="multipart/form-data">
             Date of session: <input asp-for="Date" /><br>
             Session number of this day: <input asp-for="SessionNumberUploaded" /><br>
@@ -21,11 +28,9 @@
             App log: <input asp-for="AppLog" multiple /><br>
             Server log: <input asp-for="ServerLog" multiple /><br>
             <input type="submit" />
-        </form>
+        </form>*@
     </div>
     <div class="p-1"></div>
 </div>
 
-
-
-
+<script src="~/js/site.js"></script>

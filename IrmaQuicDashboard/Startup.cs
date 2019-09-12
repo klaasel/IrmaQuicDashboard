@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IrmaQuicDashboard.Repository;
+using IrmaQuicDashboard.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,6 +36,9 @@ namespace IrmaQuicDashboard
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddDbContext<DashboardContext>(options => options.UseSqlite("Data Source=dashboard.db"));
+            services.AddScoped(typeof(ILogEntriesRepository), typeof(LogEntriesRepository));
+            services.AddScoped(typeof(IDashboardRepository), typeof(DashboardRepository));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

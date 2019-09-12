@@ -6,11 +6,12 @@ namespace IrmaQuicDashboard.Models
 {
     public class DashboardContext : DbContext
     {
-        public DbSet<IrmaLogEntry> LogEntries { get; set; }
+        public DashboardContext(DbContextOptions<DashboardContext> options) : base(options) { }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Source=Logs.db");
-        }
+        public DbSet<IrmaSession> IrmaSessions { get; set; }
+        public DbSet<IrmaAppLogEntry> AppLogEntries { get; set; }
+        public DbSet<IrmaServerLogEntry> ServerLogEntries { get; set; }
+        public DbSet<TimestampedLocation> TimestampedLocations { get; set; }
+        public DbSet<SessionUploadMetadata> SessionUploadMetadatas { get; set; }
     }
 }

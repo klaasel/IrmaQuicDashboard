@@ -19,7 +19,10 @@
   <ItemGroup>
     <Folder Include="Models\Entities\" />
     <Folder Include="Models\Enums\" />
-    <Folder Include="Views\IrmaLogSession\" />
     <Folder Include="Views\IrmaLogSessionUpload\" />
+    <Folder Include="Models\ViewModels\" />
+    <Folder Include="Repository\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Views\Dashboard\" />
   </ItemGroup>
 </Project>
