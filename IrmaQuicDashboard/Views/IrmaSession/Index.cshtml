@@ -3,73 +3,82 @@
     ViewData["Title"] = "IRMA session";
 }
 
-<div id="container">
-    <h1>irmajs demo</h1>
 
-    <p>
-        This page contains an IRMA attribute issuance and verification demo.
-    </p>
-    <ul>
-        <li>You should have an <a href="https://github.com/privacybydesign/irmago/tree/master/server/irmad"><code>irma server</code></a> running, with either the <code>no_auth</code> option enabled (default), or you can provide authentication details <a href="#authenticate-session-requests">below</a>.</li>
-        <li>Open the browser console to see log output and error messages.</li>
-    </ul>
+<div class="d-flex justify-content-between">
+    <div class="p-1"></div>
+    <div class="p-1">
+        <div id="container">
+            <h1>irmajs demo</h1>
 
-    <label for="server" class="label"><code>irma server</code> URL:</label>
-    <input id="server" type="text">
+            <p>
+                This page contains an IRMA attribute issuance and verification demo, based on the one distributed by the Privacy by Design Foundation.
+                For our research we used the attribute issuing as a test case.
+            </p>
 
-    <div id="result" class="status" hidden></div>
 
-    <h2>Demo 1: attribute issuance</h2>
-    <p>
-        This will issue an <a href="https://privacybydesign.foundation/attribute-index/en/irma-demo.MijnOverheid.ageLower.html"><code>irma-demo.MijnOverheid.ageLower</code></a> credential. Separate four attributes with commas.
-    </p>
-    <label for="newattrs" class="label">Attributes:</label>
-    <input type="text" id="newattrs" value="yes,yes,yes,no"><br />
-    <button id="issuance">Issue attributes</button>
+            <label for="server" class="label"><code>irma server</code> URL:</label>
+            <input id="server" type="text">
 
-    <h2>Demo 2: attribute verification</h2>
-    <p>
-        This will verify an IRMA attribute. You can look up attributes that can be verified in the <a href="https://privacybydesign.foundation/attribute-index/en/">IRMA attribute index</a>.
-        If you include a message, then that message will be signed with an attribute-based signature.
-    </p>
-    <label for="attr" class="label">Attribute:</label>
-    <input id="attr" type="text" value="irma-demo.MijnOverheid.ageLower.over18"><br />
-    <label for="label" class="label">Label:</label>
-    <input id="label" type="text" value="Over 18"><br />
-    <label for="message" class="label">Message:</label>
-    <input id="message" type="text"><br />
-    <button id="verification">Verify attribute</button>
+            <div id="result" class="status" hidden></div>
 
-    <h3 id="authenticate-session-requests">Authenticate session request</h3>
-    <p>
-        If the <code>no_auth</code> setting of your <code>irma server</code> is disabled, session requests sent to the <code>irma server</code> need to be authenticated, by including an API token in a HTTP header, or signing the request into a <a href="https://jwt.io/">JWT</a>.
-    </p>
+            <h2>Demo 1: attribute issuance</h2>
+            <p>
+                This will issue an <a href="https://privacybydesign.foundation/attribute-index/en/irma-demo.MijnOverheid.ageLower.html"><code>irma-demo.MijnOverheid.ageLower</code></a> credential. Separate four attributes with commas.
+            </p>
+            <label for="newattrs" class="label">Attributes:</label>
+            <input type="text" id="newattrs" value="yes,yes,yes,no"><br />
+            <button id="issuance">Issue attributes</button>
+            <br />
+            <br />
+            <h2>Demo 2: attribute verification</h2>
+            <p>
+                This will verify an IRMA attribute. You can look up attributes that can be verified in the <a href="https://privacybydesign.foundation/attribute-index/en/">IRMA attribute index</a>.
+                If you include a message, then that message will be signed with an attribute-based signature.
+            </p>
+            <label for="attr" class="label">Attribute:</label>
+            <input id="attr" type="text" value="irma-demo.MijnOverheid.ageLower.over18"><br />
+            <label for="label" class="label">Label:</label>
+            <input id="label" type="text" value="Over 18"><br />
+            <label for="message" class="label">Message:</label>
+            <input id="message" type="text"><br />
+            <button id="verification">Verify attribute</button>
 
-    <label for="method" class="label">Method:</label>
-    <select id="method">
-        <option value="none">none</option>
-        <option value="token">token</option>
-        <option value="hmac">hmac</option>
-        <option value="publickey">publickey</option>
-    </select><br />
-    <div id="requestor-container" hidden>
-        <label for="requestor" class="label">Requestor name:</label>
-        <input type="text" id="requestor"><br />
+            <br />
+            <br />
+               
+            <h3 id="authenticate-session-requests">Authenticate session request</h3>
+            <p>
+                If the <code>no_auth</code> setting of your <code>irma server</code> is disabled, session requests sent to the <code>irma server</code> need to be authenticated, by including an API token in a HTTP header, or signing the request into a <a href="https://jwt.io/">JWT</a>.
+            </p>
+
+            <label for="method" class="label">Method:</label>
+            <select id="method">
+                <option value="none">none</option>
+                <option value="token">token</option>
+                <option value="hmac">hmac</option>
+                <option value="publickey">publickey</option>
+            </select><br />
+            <div id="requestor-container" hidden>
+                <label for="requestor" class="label">Requestor name:</label>
+                <input type="text" id="requestor"><br />
+            </div>
+            <div id="key-container" hidden>
+                <label for="key" class="label">Key:</label>
+                <input type="text" id="key"><br />
+            </div>
+            <div id="key-pem-container" hidden>
+                <label for="key-pem" class="label">Private key (PEM):</label>
+                <textarea id="key-pem" cols="45" rows="10"></textarea><br />
+            </div>
+
+            <p>
+                <strong>Note:</strong>
+                This demo handles private keys in the user's browser. Do not do this in production!
+                You should sign the JWTs in your server's backend, or if you use an API token, <code>POST</code>
+                the session request directly from your backend to the <code>irma server</code>.
+            </p>
+
+        </div>
     </div>
-    <div id="key-container" hidden>
-        <label for="key" class="label">Key:</label>
-        <input type="text" id="key"><br />
-    </div>
-    <div id="key-pem-container" hidden>
-        <label for="key-pem" class="label">Private key (PEM):</label>
-        <textarea id="key-pem" cols="45" rows="10"></textarea><br />
-    </div>
-
-    <p>
-        <strong>Note:</strong>
-        This demo handles private keys in the user's browser. Do not do this in production!
-        You should sign the JWTs in your server's backend, or if you use an API token, <code>POST</code>
-        the session request directly from your backend to the <code>irma server</code>.
-    </p>
-
+    <div class="p-1"></div>
 </div>
