@@ -33,6 +33,9 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="IrmaSession" asp-action="Index">Start Session</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="IrmaLogSessionUpload" asp-action="Index">Upload Session</a>
                             </li>
                         </ul>
@@ -71,6 +74,8 @@
                     integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
             </script>
         </environment>
+        <script src="~/js/irma.js" asp-append-version="true"></script>
+        <script src="~/js/irmasession.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
 
         @RenderSection("Scripts", required: false)

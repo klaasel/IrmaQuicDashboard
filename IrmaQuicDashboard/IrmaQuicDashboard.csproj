@@ -25,5 +25,6 @@
     <Folder Include="Extensions\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Logic\" />
+    <Folder Include="Views\IrmaSession\" />
   </ItemGroup>
 </Project>
