@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using IrmaQuicDashboard.Extensions;
 using IrmaQuicDashboard.Models;
 using IrmaQuicDashboard.Models.Entities;
 using IrmaQuicDashboard.Models.Enums;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace IrmaQuicDashboard.Repository
 {
-    public class LogEntriesRepository : ILogEntriesRepository
+    public class AppLogEntriesRepository : IAppLogEntriesRepository
     {
         private readonly DashboardContext _context;
         private IrmaSession _currentIrmaSession;
 
-        public LogEntriesRepository(DashboardContext context)
+        public AppLogEntriesRepository(DashboardContext context)
         {
             _context = context;
         }
 
-        public bool CreateNewUploadSession(DateTime date, string location, string description, bool usesQuic, int sessionNumberUploaded, IFormFile applog, IFormFile serverLog)
+        public SessionUploadMetadata CreateNewUploadSession(DateTime date, string location, string description, bool usesQuic, int sessionNumberUploaded, IFormFile applog)
         {
             var success = false;
             var sessionMetadata = new SessionUploadMetadata()
@@ -38,18 +40,16 @@ namespace IrmaQuicDashboard.Repository
             _context.Add(sessionMetadata);
             _context.SaveChanges();
 
-            // convert the logs
+            // convert the app log
             success = ConvertAndSaveAppLog(applog, sessionMetadata.Id);
-            success = ConvertAndSaveServerLog(serverLog);
 
             // reset the currentIrmaSession
             _currentIrmaSession = null;
-            return success;
+            return sessionMetadata;
         }
 
         private bool ConvertAndSaveAppLog(IFormFile file, Guid sessionMetadataId)
         {
-            // TODO: check if extension is .txt
             // because a lot of lines need to be filtered, don't save them in memory but immediately write them to the database
             using (var reader = new StreamReader(file.OpenReadStream()))
             {
@@ -59,12 +59,6 @@ namespace IrmaQuicDashboard.Repository
                     ProcessAppLogLine(line, sessionMetadataId);
                 }
             }
-            return true;
-        }
-
-        private bool ConvertAndSaveServerLog(IFormFile file)
-        {
-            // TODO
             return true;
         }
 
@@ -81,15 +75,15 @@ namespace IrmaQuicDashboard.Repository
             }
             if (line.Contains("RequestIssuancePermission"))
             {
-                ProcessLogEntry(line, AppLogEntryType.RequestIssuancePermission);
+                ProcessAppLogEntry(line, AppLogEntryType.RequestIssuancePermission);
             }
             if (line.Contains("RespondPermission"))
             {
-                ProcessLogEntry(line, AppLogEntryType.RespondPermission);
+                ProcessAppLogEntry(line, AppLogEntryType.RespondPermission);
             }
             if (line.Contains("Success"))
             {
-                ProcessLogEntry(line, AppLogEntryType.Success);
+                ProcessAppLogEntry(line, AppLogEntryType.Success);
             }
 
             // if the line does not contain one of these, just continue.
@@ -139,6 +133,7 @@ namespace IrmaQuicDashboard.Repository
 
             // create the log entry
             var appLogEntry = new IrmaAppLogEntry();
+            appLogEntry.Id = Guid.NewGuid();
             appLogEntry.Timestamp = timestamp;
             appLogEntry.Type = AppLogEntryType.NewSession;
             appLogEntry.IrmaSessionId = irmaSession.Id;
@@ -154,12 +149,11 @@ namespace IrmaQuicDashboard.Repository
             return true;
         }
 
-        private bool ProcessLogEntry(string line, AppLogEntryType type)
+        private bool ProcessAppLogEntry(string line, AppLogEntryType type)
         {
             if (type == AppLogEntryType.NewSession)
                 throw new ArgumentException("Use ProcessNewIrmaSessionAndLogEntry method", nameof(type));
 
-            bool success = false;
             // deconstruct line: [<timestamp>]| Receiving ..: | JSON object 
             var lineParts = line.Split('|');
             var timestamp = DateTime.Parse(lineParts[0].Trim('[').Trim(']'));
@@ -168,7 +162,7 @@ namespace IrmaQuicDashboard.Repository
             // check the sessionId
             int sessionId = json.sessionId;
             if (sessionId == 0 || sessionId !=_currentIrmaSession.AppSessionId)
-                return success;
+                return false;
 
             // create the log entry
             var appLogEntry = new IrmaAppLogEntry();
@@ -181,9 +175,7 @@ namespace IrmaQuicDashboard.Repository
             _context.Add(appLogEntry);
             _context.SaveChanges();
 
-            success = true;
-
-            return success;
+            return true;
         }
     }
 }

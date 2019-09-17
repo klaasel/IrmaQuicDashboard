@@ -36,7 +36,7 @@ namespace IrmaQuicDashboard.Logic
 
             var locs = locations.OrderBy(x => x.Timestamp);
             var latlong = locs.First(l => l.Timestamp >= timestamp);
-            return $"{latlong.Longitude.ToString()},{latlong.Longitude.ToString()}";
+            return $"{latlong.Latitude.ToString()},{latlong.Longitude.ToString()}";
         }
 
     }

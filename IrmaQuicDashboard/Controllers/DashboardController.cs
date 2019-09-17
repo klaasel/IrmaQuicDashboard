@@ -67,7 +67,9 @@ namespace IrmaQuicDashboard.Controllers
                 Location = DashboardLogic.CalculateLocationBasedOnTimestamp(irmaSession.Timestamp, irmaSession.TimestampedLocations),
                 NewSessionToRequestIssuanceDelta = DashboardLogic.CalculateNewSessionToRequestIssuanceDelta(irmaSession.AppLogEntries),
                 RespondToSuccessDelta = DashboardLogic.CalculateRespondToSuccessDeltaDelta(irmaSession.AppLogEntries),
-            }).ToList();
+            })
+            .OrderBy(sessions => sessions.StartTime)
+            .ToList();
 
             // calculate averages
             dashboardVM.AverageDeltaNewSessionToRequestIssuance = dashboardVM.IrmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average();

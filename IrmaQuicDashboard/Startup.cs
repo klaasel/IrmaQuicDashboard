@@ -37,7 +37,8 @@ namespace IrmaQuicDashboard
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<DashboardContext>();
-            services.AddScoped(typeof(ILogEntriesRepository), typeof(LogEntriesRepository));
+            services.AddScoped(typeof(IAppLogEntriesRepository), typeof(AppLogEntriesRepository));
+            services.AddScoped(typeof(IServerLogEntriesRepository), typeof(ServerLogEntriesRepository));
             services.AddScoped(typeof(IDashboardRepository), typeof(DashboardRepository));
         }
 

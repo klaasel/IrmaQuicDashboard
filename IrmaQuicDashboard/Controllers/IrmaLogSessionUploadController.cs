@@ -13,11 +13,13 @@ namespace IrmaQuicDashboard.Controllers
 {
     public class IrmaLogSessionUploadController : Controller
     {
-        private readonly ILogEntriesRepository _repository;
+        private readonly IAppLogEntriesRepository _appLogRepository;
+        private readonly IServerLogEntriesRepository _serverLogRepository;
 
-        public IrmaLogSessionUploadController(ILogEntriesRepository repository)
+        public IrmaLogSessionUploadController(IAppLogEntriesRepository appLogRepository, IServerLogEntriesRepository serverLogRepository)
         {
-            _repository = repository;
+            _appLogRepository = appLogRepository;
+            _serverLogRepository = serverLogRepository;
         }
 
         // GET: /<controller>/
@@ -34,15 +36,17 @@ namespace IrmaQuicDashboard.Controllers
             if (model == null)
                 return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 
-            _repository.CreateNewUploadSession(
+            var uploadMetadata = _appLogRepository.CreateNewUploadSession(
                 model.Date,
                 model.Location,
                 model.Description,
                 model.UsesQuic,
                 model.SessionNumberUploaded,
-                model.AppLog,
-                model.ServerLog
+                model.AppLog
+               
                 );
+
+            _serverLogRepository.ProcessServerLog(model.ServerLog, uploadMetadata.Id);
 
             return RedirectToAction("Index");
         }
