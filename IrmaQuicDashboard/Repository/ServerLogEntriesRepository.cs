@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using IrmaQuicDashboard.Extensions;
@@ -45,30 +46,34 @@ namespace IrmaQuicDashboard.Repository
             if (line.Contains("sessionPtr"))
             {
                 // 1. Process the sessionpointer from irmajs (TRACE <= response duration=16.2826ms response={"sessionPtr" etc):
+                // this will set the _currentIrmaSession
                 return ProcessAndUpdateIrmaSession(line, sessionMetadataId);
             }
-            if (line.Contains("TRACE => request") &&
-                line.Contains("url=/irma/") &&
-                !line.EndsWith("status", StringComparison.CurrentCulture) &&
-                !line.EndsWith("commitments", StringComparison.CurrentCulture))
+            if (_currentIrmaSession != null)
             {
-                // 2. Process the GET path/<token> log message (TRACE => request headers=map ... url=/irma/token)
-                return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogGETIrmaWithToken);
-            }
-            if (line.Contains("TRACE <= response") && line.Contains("issuance"))
-            {
-                // 3. Process response of irma/<token> (TRACE <= response duration=0s response={"@context": etc)
-                return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogJSONResponseIssuingCredentials);
-            }
-            if (line.Contains("TRACE => request") && line.Contains("commitments"))
-            {
-                // 4. Process the POST commitments 
-                return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogPOSTCommitments);
-            }
-            if (line.Contains("TRACE <= response") &&line.Contains("{\"proof\":{\"c\":"))
-            {
-                // 5. Process the response (TRACE <= response duration=31.2084ms response=[{"proof":{"c": etc.)
-                return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogJSONResponseProof);
+                if (line.Contains("TRACE => request") &&
+                    line.Contains("url=/irma/") &&
+                    !line.EndsWith("status", StringComparison.CurrentCulture) &&
+                    !line.EndsWith("commitments", StringComparison.CurrentCulture))
+                {
+                    // 2. Process the GET path/<token> log message (TRACE => request headers=map ... url=/irma/token)
+                    return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogGETIrmaWithToken);
+                }
+                if (line.Contains("TRACE <= response") && line.Contains("issuance"))
+                {
+                    // 3. Process response of irma/<token> (TRACE <= response duration=0s response={"@context": etc)
+                    return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogJSONResponseIssuingCredentials);
+                }
+                if (line.Contains("TRACE => request") && line.Contains("commitments"))
+                {
+                    // 4. Process the POST commitments 
+                    return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogPOSTCommitments);
+                }
+                if (line.Contains("TRACE <= response") && line.Contains("{\"proof\":{\"c\":"))
+                {
+                    // 5. Process the response (TRACE <= response duration=31.2084ms response=[{"proof":{"c": etc.)
+                    return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogJSONResponseProof);
+                }
             }
 
             // if the line does not contain one of these, just continue.
@@ -90,9 +95,14 @@ namespace IrmaQuicDashboard.Repository
                 .Include(sessions => sessions.AppLogEntries)
                 .FirstOrDefault(session => session.SessionToken == sessionToken);
 
-            // validate existence 
+            // validate existence, if not continue with the next session
             if (irmaSession == null)
-                return false;
+            {
+                _currentIrmaSession = null;
+                Debug.WriteLine("No corresponding irma session found for line: " + line);
+                return true;
+            }
+                
 
             var successAppLogEntry = irmaSession.AppLogEntries.FirstOrDefault(x => x.Type == AppLogEntryType.Success);
 

@@ -76,12 +76,12 @@ namespace IrmaQuicDashboard.Controllers
             .ToList();
 
             // calculate averages
-            dashboardVM.AverageNewSessionToRequestIssuance = dashboardVM.IrmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average();
-            dashboardVM.AverageRespondToSuccess = dashboardVM.IrmaSessions.Select(i => i.RespondToSuccessDelta).Average();
-            dashboardVM.AverageNewSessionToServerLog = dashboardVM.IrmaSessions.Select(i => i.NewSessionToServerLogDelta).Average();
-            dashboardVM.AverageServerLogToRequestIssuance = dashboardVM.IrmaSessions.Select(i => i.ServerLogToRequestIssuanceDelta).Average();
-            dashboardVM.AverageRespondToServerLog = dashboardVM.IrmaSessions.Select(i => i.RespondToServerLogDelta).Average();
-            dashboardVM.AverageServerLogToSuccess = dashboardVM.IrmaSessions.Select(i => i.ServerLogToSuccessDelta).Average();
+            dashboardVM.AverageNewSessionToRequestIssuance = Math.Round(dashboardVM.IrmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average(),3, MidpointRounding.AwayFromZero);
+            dashboardVM.AverageRespondToSuccess = Math.Round(dashboardVM.IrmaSessions.Select(i => i.RespondToSuccessDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            dashboardVM.AverageNewSessionToServerLog = Math.Round(dashboardVM.IrmaSessions.Select(i => i.NewSessionToServerLogDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            dashboardVM.AverageServerLogToRequestIssuance = Math.Round(dashboardVM.IrmaSessions.Select(i => i.ServerLogToRequestIssuanceDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            dashboardVM.AverageRespondToServerLog = Math.Round(dashboardVM.IrmaSessions.Select(i => i.RespondToServerLogDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            dashboardVM.AverageServerLogToSuccess = Math.Round(dashboardVM.IrmaSessions.Select(i => i.ServerLogToSuccessDelta).Average(), 3, MidpointRounding.AwayFromZero);
 
             return dashboardVM;
         }

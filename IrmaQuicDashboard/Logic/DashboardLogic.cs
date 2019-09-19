@@ -22,6 +22,12 @@ namespace IrmaQuicDashboard.Logic
 
         private static double CalculateApplogTimestampDelta(List<IrmaAppLogEntry> appLogEntries, AppLogEntryType startType, AppLogEntryType endType)
         {
+            if (!appLogEntries.Any())
+            {
+                // there is something missing, indicate by -1
+                return -1.0;
+            }
+
             var endEntry = appLogEntries.Single(a => a.Type == endType);
             var startEntry = appLogEntries.Single(a => a.Type == startType);
             var diff = endEntry.Timestamp - startEntry.Timestamp;
@@ -57,6 +63,12 @@ namespace IrmaQuicDashboard.Logic
 
         private static double CalculateAppToServerLogsTimestampDelta(List<IrmaAppLogEntry> appLogEntries, List<IrmaServerLogEntry> serverLogEntries, AppLogEntryType startType, ServerLogEntryType endType)
         {
+            if (!serverLogEntries.Any() || !appLogEntries.Any())
+            {
+                // there is something missing, indicate by -1
+                return -1.0;
+            }
+
             var endEntry = serverLogEntries.Single(a => a.Type == endType);
             var startEntry = appLogEntries.Single(a => a.Type == startType);
             var diff = endEntry.Timestamp - startEntry.Timestamp;
@@ -68,6 +80,11 @@ namespace IrmaQuicDashboard.Logic
 
         private static double CalculateServerToAppLogsTimestampDelta(List<IrmaAppLogEntry> appLogEntries, List<IrmaServerLogEntry> serverLogEntries, ServerLogEntryType startType, AppLogEntryType endType)
         {
+            if (!serverLogEntries.Any() || !appLogEntries.Any())
+            {
+                // there is something missing, indicate by -1
+                return -1.0;
+            }
             var endEntry = appLogEntries.Single(a => a.Type == endType);
             var startEntry = serverLogEntries.Single(a => a.Type == startType);
             var diff = endEntry.Timestamp - startEntry.Timestamp;
