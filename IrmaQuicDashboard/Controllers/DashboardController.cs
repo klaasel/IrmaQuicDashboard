@@ -72,7 +72,16 @@ namespace IrmaQuicDashboard.Controllers
                 RespondToServerLogDelta = DashboardLogic.CalculateRespondToServerLogDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
                 ServerLogToSuccessDelta = DashboardLogic.CalculateServerLogToSuccessDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
             })
+            // Filter on incomplete data:
+            .Where(x =>
+                x.NewSessionToRequestIssuanceDelta >=0 &&
+                x.NewSessionToServerLogDelta >= 0 &&
+                x.RespondToServerLogDelta >= 0 &&
+                x.RespondToSuccessDelta >= 0 &&
+                x.ServerLogToRequestIssuanceDelta >= 0 &&
+                x.ServerLogToSuccessDelta >= 0)
             .OrderBy(sessions => sessions.StartTime)
+          
             .ToList();
 
             // calculate averages

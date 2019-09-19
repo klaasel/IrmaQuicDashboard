@@ -106,6 +106,13 @@ namespace IrmaQuicDashboard.Repository
 
             var successAppLogEntry = irmaSession.AppLogEntries.FirstOrDefault(x => x.Type == AppLogEntryType.Success);
 
+            if (successAppLogEntry == null)
+            {
+                // incomplete session, don't use it but continue
+                _currentIrmaSession = null;
+                Debug.WriteLine("No successAppLogEntry found for line: " + line);
+                return true;
+            }
             // validate session has not finished yet
             if (timestamp >= successAppLogEntry.Timestamp)
             {

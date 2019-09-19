@@ -28,8 +28,16 @@ namespace IrmaQuicDashboard.Logic
                 return -1.0;
             }
 
-            var endEntry = appLogEntries.Single(a => a.Type == endType);
-            var startEntry = appLogEntries.Single(a => a.Type == startType);
+            var endEntry = appLogEntries.FirstOrDefault(a => a.Type == endType);
+            var startEntry = appLogEntries.FirstOrDefault(a => a.Type == startType);
+
+            if (endEntry == null || startEntry == null )
+            {
+                // there is something missing, indicate by -1
+                return -1.0;
+            }
+
+
             var diff = endEntry.Timestamp - startEntry.Timestamp;
 
             if (diff.Milliseconds < 0)
@@ -69,8 +77,15 @@ namespace IrmaQuicDashboard.Logic
                 return -1.0;
             }
 
-            var endEntry = serverLogEntries.Single(a => a.Type == endType);
-            var startEntry = appLogEntries.Single(a => a.Type == startType);
+            var endEntry = serverLogEntries.FirstOrDefault(a => a.Type == endType);
+            var startEntry = appLogEntries.FirstOrDefault(a => a.Type == startType);
+
+            if (endEntry == null || startEntry == null)
+            {
+                // there is something missing, indicate by -1
+                return -1.0;
+            }
+
             var diff = endEntry.Timestamp - startEntry.Timestamp;
 
             if (diff.Milliseconds < 0)
