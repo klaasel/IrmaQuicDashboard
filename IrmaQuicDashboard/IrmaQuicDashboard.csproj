@@ -26,5 +26,6 @@
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Logic\" />
     <Folder Include="Views\IrmaSession\" />
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 </Project>

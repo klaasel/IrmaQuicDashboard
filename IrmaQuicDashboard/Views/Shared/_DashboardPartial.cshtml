@@ -22,19 +22,19 @@
         <label asp-for="Description"></label>
         @Html.DisplayFor(model => model.Description)
     </div>
-    <div>
-        <label asp-for="UsesQuic"></label>
-        @Html.DisplayFor(model => model.UsesQuic)
-    </div>
-    <div>
-        <label>Average NewSession To Request Issuance</label>
-        @Html.DisplayFor(model => model.AverageDeltaNewSessionToRequestIssuance)
-    </div>
-    <div>
-        <label>Average Respond To Success</label>
-        @Html.DisplayFor(model => model.AverageDeltaRespondToSuccess)
-    </div>
 
+    @if (Model.UsesQuic)
+    {
+        <div>
+            <label>Transport: </label>  <b>QUIC</b>
+        </div>
+    }
+    else
+    {
+        <div>
+            <label>Transport: </label>  <b>HTTP/TLS</b>
+        </div>
+    }
 
     <table class="table">
         <tr>
@@ -85,6 +85,31 @@
                 </td>
             </tr>
         }
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <p><b>Averages: </b></p>
+            </td>
+            <td>
+                <b>@Html.DisplayFor(modelItem => Model.AverageNewSessionToRequestIssuance)</b>
+            </td>
+            <td>
+                <b>@Html.DisplayFor(modelItem => Model.AverageRespondToSuccess)</b>
+            </td>
+            <td>
+                <b>@Html.DisplayFor(modelItem => Model.AverageNewSessionToServerLog)</b>
+            </td>
+            <td>
+                <b>@Html.DisplayFor(modelItem => Model.AverageServerLogToRequestIssuance)</b>
+            </td>
+            <td>
+                <b>@Html.DisplayFor(modelItem => Model.AverageRespondToServerLog)</b>
+            </td>
+            <td>
+                <b>@Html.DisplayFor(modelItem => Model.AverageServerLogToSuccess)</b>
+            </td>
+        </tr>
     </table>
 </div>
 <div class="p-1"></div>

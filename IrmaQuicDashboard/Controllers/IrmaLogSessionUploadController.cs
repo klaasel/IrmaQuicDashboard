@@ -35,18 +35,23 @@ namespace IrmaQuicDashboard.Controllers
             
             if (model == null)
                 return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            try
+            {
+                var uploadMetadata = _appLogRepository.CreateNewUploadSession(
+                    model.Date,
+                    model.Location,
+                    model.Description,
+                    model.UsesQuic,
+                    model.SessionNumberUploaded,
+                    model.AppLog
 
-            var uploadMetadata = _appLogRepository.CreateNewUploadSession(
-                model.Date,
-                model.Location,
-                model.Description,
-                model.UsesQuic,
-                model.SessionNumberUploaded,
-                model.AppLog
-               
-                );
+                    );
 
-            _serverLogRepository.ProcessServerLog(model.ServerLog, uploadMetadata.Id);
+                _serverLogRepository.ProcessServerLog(model.ServerLog, uploadMetadata.Id);
+            }catch(LogProcessingException e)
+            {
+                return View("Error",new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, ErrorMessage = e.Message });
+            }
 
             return RedirectToAction("Index");
         }

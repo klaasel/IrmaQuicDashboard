@@ -30,7 +30,7 @@ namespace IrmaQuicDashboard.Repository
                     var line = reader.ReadLine();
                     var success = ProcessServerLogLine(line, sessionMetadataId);
                     if (!success)
-                        throw new InvalidDataException("Processing server log unsuccessful: " + line);
+                        throw new LogProcessingException("Processing server log unsuccessful at line: " + line);
                 }
             }
 
@@ -41,30 +41,34 @@ namespace IrmaQuicDashboard.Repository
 
         private bool ProcessServerLogLine(string line, Guid sessionMetadataId)
         {
+            // in order of appearance:
             if (line.Contains("sessionPtr"))
             {
-                // 1. Process the sessionpointer (from irmajs (TRACE HTTP JSON response: 200 {"sessionPtr":{"u": etc):
-                ProcessAndUpdateIrmaSession(line, sessionMetadataId);
+                // 1. Process the sessionpointer from irmajs (TRACE <= response duration=16.2826ms response={"sessionPtr" etc):
+                return ProcessAndUpdateIrmaSession(line, sessionMetadataId);
             }
-            if (line.Contains("DEBUG Routing protocol message method=GET path=irma/") && !line.EndsWith("status", StringComparison.CurrentCulture))
+            if (line.Contains("TRACE => request") &&
+                line.Contains("url=/irma/") &&
+                !line.EndsWith("status", StringComparison.CurrentCulture) &&
+                !line.EndsWith("commitments", StringComparison.CurrentCulture))
             {
-                // 2. Process the GET path/<token> log message and connect it to irma session (DEBUG Routing protocol message method=GET path=irma/<token>)
-                ProcessServerLogEntry(line, ServerLogEntryType.ServerLogGETIrmaWithToken);
+                // 2. Process the GET path/<token> log message (TRACE => request headers=map ... url=/irma/token)
+                return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogGETIrmaWithToken);
             }
-            if (line.Contains("TRACE HTTP JSON response: 200 {\"context\":"))
+            if (line.Contains("TRACE <= response") && line.Contains("issuance"))
             {
-                // 3. Process response of path/<token> (TRACE HTTP JSON response: 200 {"context":"AQ==", etc..)
-                ProcessServerLogEntry(line, ServerLogEntryType.ServerLogJSONResponseIssuingCredentials);
+                // 3. Process response of irma/<token> (TRACE <= response duration=0s response={"@context": etc)
+                return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogJSONResponseIssuingCredentials);
             }
-            if (line.Contains("commitments"))
+            if (line.Contains("TRACE => request") && line.Contains("commitments"))
             {
-                // 4. Process the POST commitments (DEBUG Routing protocol message method=POST path=irma/<token>/commitments
-                ProcessServerLogEntry(line, ServerLogEntryType.ServerLogPOSTCommitments);
+                // 4. Process the POST commitments 
+                return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogPOSTCommitments);
             }
-            if (line.Contains("TRACE HTTP JSON response: 200 [{\"proof\":{\"c\":"))
+            if (line.Contains("TRACE <= response") &&line.Contains("{\"proof\":{\"c\":"))
             {
-                // 5. Process the response (TRACE HTTP JSON response: 200 [{"proof":{"c": etc)
-                ProcessServerLogEntry(line, ServerLogEntryType.ServerLogJSONResponseProof);
+                // 5. Process the response (TRACE <= response duration=31.2084ms response=[{"proof":{"c": etc.)
+                return ProcessServerLogEntry(line, ServerLogEntryType.ServerLogJSONResponseProof);
             }
 
             // if the line does not contain one of these, just continue.
@@ -75,7 +79,7 @@ namespace IrmaQuicDashboard.Repository
         {
             // deconstruct line: [<timestamp>] TRACE HTTP JSON response: 200 {"sessionPtr":{"u": ... }
             var timestamp = DateTime.Parse(line.Between("[", "]"));
-            dynamic json = JsonConvert.DeserializeObject<dynamic>(line.After("200 ").Trim());
+            dynamic json = JsonConvert.DeserializeObject<dynamic>(line.Between("response=", " status=200").Trim());
             string url = json.sessionPtr.u;
             string sessionToken = url.After("/irma/");
             var irmaJsSessionToken = json.token;
@@ -111,12 +115,20 @@ namespace IrmaQuicDashboard.Repository
 
         private bool ProcessServerLogEntry(string line, ServerLogEntryType type)
         {
-            var timestamp = DateTime.Parse(line.Between("[", "] "));
+            var timestamp = DateTime.Parse(line.Between("[", "] TRACE"));
 
             if (type == ServerLogEntryType.ServerLogGETIrmaWithToken)
             {
                 // validate if token is the same
-                var sessionToken = line.After("path=irma/");
+                var sessionToken = line.Between("url=/irma/", "/"); 
+                if (sessionToken != _currentIrmaSession.SessionToken)
+                    return false;
+            }
+
+            if (type == ServerLogEntryType.ServerLogPOSTCommitments)
+            {
+                // validate if token is the same
+                var sessionToken = line.Between("url=/irma/","/commitments");
                 if (sessionToken != _currentIrmaSession.SessionToken)
                     return false;
             }

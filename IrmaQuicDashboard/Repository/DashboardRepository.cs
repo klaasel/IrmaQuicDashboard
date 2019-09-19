@@ -23,6 +23,8 @@ namespace IrmaQuicDashboard.Repository
                         .ThenInclude(irmaSession => irmaSession.AppLogEntries)
                     .Include(uploads => uploads.IrmaSessions)
                         .ThenInclude(irmaSession => irmaSession.TimestampedLocations)
+                    .Include(uploads => uploads.IrmaSessions)
+                        .ThenInclude(irmaSession => irmaSession.ServerLogEntries)
                    .SingleOrDefault(x => x.Id == id);
 
             return session;

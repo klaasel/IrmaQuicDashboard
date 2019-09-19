@@ -66,14 +66,22 @@ namespace IrmaQuicDashboard.Controllers
                 StartTime = irmaSession.Timestamp.ToLongTimeString(),
                 Location = DashboardLogic.CalculateLocationBasedOnTimestamp(irmaSession.Timestamp, irmaSession.TimestampedLocations),
                 NewSessionToRequestIssuanceDelta = DashboardLogic.CalculateNewSessionToRequestIssuanceDelta(irmaSession.AppLogEntries),
-                RespondToSuccessDelta = DashboardLogic.CalculateRespondToSuccessDeltaDelta(irmaSession.AppLogEntries),
+                RespondToSuccessDelta = DashboardLogic.CalculateRespondToSuccessDelta(irmaSession.AppLogEntries),
+                NewSessionToServerLogDelta = DashboardLogic.CalculateNewSessionToServerLogDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
+                ServerLogToRequestIssuanceDelta = DashboardLogic.CalculateServerLogToRequestIssuanceDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
+                RespondToServerLogDelta = DashboardLogic.CalculateRespondToServerLogDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
+                ServerLogToSuccessDelta = DashboardLogic.CalculateServerLogToSuccessDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
             })
             .OrderBy(sessions => sessions.StartTime)
             .ToList();
 
             // calculate averages
-            dashboardVM.AverageDeltaNewSessionToRequestIssuance = dashboardVM.IrmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average();
-            dashboardVM.AverageDeltaRespondToSuccess = dashboardVM.IrmaSessions.Select(i => i.RespondToSuccessDelta).Average();
+            dashboardVM.AverageNewSessionToRequestIssuance = dashboardVM.IrmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average();
+            dashboardVM.AverageRespondToSuccess = dashboardVM.IrmaSessions.Select(i => i.RespondToSuccessDelta).Average();
+            dashboardVM.AverageNewSessionToServerLog = dashboardVM.IrmaSessions.Select(i => i.NewSessionToServerLogDelta).Average();
+            dashboardVM.AverageServerLogToRequestIssuance = dashboardVM.IrmaSessions.Select(i => i.ServerLogToRequestIssuanceDelta).Average();
+            dashboardVM.AverageRespondToServerLog = dashboardVM.IrmaSessions.Select(i => i.RespondToServerLogDelta).Average();
+            dashboardVM.AverageServerLogToSuccess = dashboardVM.IrmaSessions.Select(i => i.ServerLogToSuccessDelta).Average();
 
             return dashboardVM;
         }

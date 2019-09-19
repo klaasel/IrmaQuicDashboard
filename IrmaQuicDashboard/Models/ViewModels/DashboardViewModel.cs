@@ -1,19 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using IrmaQuicDashboard.Models.Entities;
 
 namespace IrmaQuicDashboard.Models.ViewModels
 {
     public class DashboardViewModel
     {
+        [Display(Name = "Upload session date: ")]
         public DateTime UploadSessionDate { get; set; }
+
+        [Display(Name = "Upload session number: ")]
         public int SessionNumber { get; set; }
+
+        [Display(Name = "Location: ")]
         public string Location { get; set; }
+
+        [Display(Name = "Description: ")]
         public string Description { get; set; }
+
+        [Display(Name = "QUIC as transport? ")]
         public bool UsesQuic { get; set; }
 
-        public double AverageDeltaNewSessionToRequestIssuance { get; set; }
-        public double AverageDeltaRespondToSuccess { get; set; }
+        public double AverageNewSessionToRequestIssuance { get; set; }
+        public double AverageRespondToSuccess { get; set; }
+        public double AverageNewSessionToServerLog { get; set; }
+        public double AverageServerLogToRequestIssuance { get; set; }
+        public double AverageRespondToServerLog { get; set; }
+        public double AverageServerLogToSuccess { get; set; }
 
         public List<IrmaSessionViewModel> IrmaSessions { get; set; }
 

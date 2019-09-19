@@ -56,7 +56,9 @@ namespace IrmaQuicDashboard.Repository
                 while (reader.Peek() >= 0)
                 {
                     var line = reader.ReadLine();
-                    ProcessAppLogLine(line, sessionMetadataId);
+                    var success = ProcessAppLogLine(line, sessionMetadataId);
+                    if (!success)
+                        throw new LogProcessingException("Processing server log unsuccessful at line: " + line);
                 }
             }
             return true;
@@ -67,23 +69,23 @@ namespace IrmaQuicDashboard.Repository
             // only process Position if a session is active
             if (line.Contains("Position") && _currentIrmaSession != null)
             {
-                ProcessTimestampedLocation(line);
+                return ProcessTimestampedLocation(line);
             }
             if (line.Contains("NewSession"))
             {
-                ProcessNewIrmaSessionAndLogEntry(line, sessionMetadataId);
+                return ProcessNewIrmaSessionAndLogEntry(line, sessionMetadataId);
             }
             if (line.Contains("RequestIssuancePermission"))
             {
-                ProcessAppLogEntry(line, AppLogEntryType.RequestIssuancePermission);
+                return ProcessAppLogEntry(line, AppLogEntryType.RequestIssuancePermission);
             }
             if (line.Contains("RespondPermission"))
             {
-                ProcessAppLogEntry(line, AppLogEntryType.RespondPermission);
+                return ProcessAppLogEntry(line, AppLogEntryType.RespondPermission);
             }
             if (line.Contains("Success"))
             {
-                ProcessAppLogEntry(line, AppLogEntryType.Success);
+                return ProcessAppLogEntry(line, AppLogEntryType.Success);
             }
 
             // if the line does not contain one of these, just continue.
