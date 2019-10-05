@@ -10,6 +10,12 @@ namespace IrmaQuicDashboard.Models
 
         public string ErrorMessage { get; set; }
 
+        public string Stacktrace { get; set; }
+
         public bool ShowErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
+
+        public bool ShowStacktrace => !string.IsNullOrEmpty(Stacktrace);
+
+        
     }
 }

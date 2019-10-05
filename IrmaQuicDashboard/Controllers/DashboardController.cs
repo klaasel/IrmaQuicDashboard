@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using IrmaQuicDashboard.Logic;
+using IrmaQuicDashboard.Models;
 using IrmaQuicDashboard.Models.Entities;
 using IrmaQuicDashboard.Models.Enums;
 using IrmaQuicDashboard.Models.ViewModels;
@@ -41,9 +43,18 @@ namespace IrmaQuicDashboard.Controllers
         [HttpPost]
         public IActionResult UploadSession(SessionFilterViewModel filter)
         {
-            var uploadSession = _repository.GetUploadSession(filter.Id);
-            var dashboardVM = MapUploadSessionToViewModel(uploadSession);
-            return PartialView("_DashboardPartial", dashboardVM);
+            try
+            {
+                var uploadSession = _repository.GetUploadSession(filter.Id);
+                var dashboardVM = MapUploadSessionToViewModel(uploadSession);
+                return PartialView("_DashboardPartial", dashboardVM);
+            }
+            catch (Exception e)
+            {
+                return PartialView("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, ErrorMessage = e.Message, Stacktrace = e.StackTrace });
+            }
+
+            
         }
 
 
@@ -59,7 +70,7 @@ namespace IrmaQuicDashboard.Controllers
             dashboardVM.UsesQuic = uploadSession.UsesQuic;
 
             // calculate fields of IrmaSessions
-            dashboardVM.IrmaSessions = uploadSession.IrmaSessions.Select
+            var irmaSessionSelection = uploadSession.IrmaSessions.Select
             (irmaSession => new IrmaSessionViewModel()
             {
                 AppSessionId = irmaSession.AppSessionId,
@@ -71,18 +82,29 @@ namespace IrmaQuicDashboard.Controllers
                 ServerLogToRequestIssuanceDelta = DashboardLogic.CalculateServerLogToRequestIssuanceDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
                 RespondToServerLogDelta = DashboardLogic.CalculateRespondToServerLogDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
                 ServerLogToSuccessDelta = DashboardLogic.CalculateServerLogToSuccessDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
-            })
-            // Filter on incomplete data:
-            .Where(x =>
-                x.NewSessionToRequestIssuanceDelta >=0 &&
-                x.NewSessionToServerLogDelta >= 0 &&
-                x.RespondToServerLogDelta >= 0 &&
-                x.RespondToSuccessDelta >= 0 &&
-                x.ServerLogToRequestIssuanceDelta >= 0 &&
-                x.ServerLogToSuccessDelta >= 0)
-            .OrderBy(sessions => sessions.StartTime)
-          
-            .ToList();
+            });
+            var filteredIrmaSessionProjection = irmaSessionSelection
+                // filter the projection on criterium: app delta should be more or equal as sum of the corresponding app-server deltas.
+                .Where(x =>
+                    x.NewSessionToRequestIssuanceDelta >= 0 &&
+                    (x.NewSessionToServerLogDelta + x.ServerLogToRequestIssuanceDelta <= x.NewSessionToRequestIssuanceDelta) &&
+                    x.RespondToSuccessDelta >= 0 &&
+                    (x.RespondToServerLogDelta + x.ServerLogToSuccessDelta <= x.RespondToSuccessDelta)
+                    );
+
+            if (!filteredIrmaSessionProjection.Any())
+            {
+                // app and server logs calculations do not match! show them anyway with warning: corrupt data.
+                dashboardVM.IrmaSessions = irmaSessionSelection
+                    .OrderBy(sessions => sessions.StartTime)
+                    .ToList();
+                dashboardVM.ErrorMessage = "The app and server logs calculations do not match!";
+            } else
+            {
+                dashboardVM.IrmaSessions = filteredIrmaSessionProjection
+                .OrderBy(sessions => sessions.StartTime)
+                .ToList();
+            }
 
             // calculate averages
             dashboardVM.AverageNewSessionToRequestIssuance = Math.Round(dashboardVM.IrmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average(),3, MidpointRounding.AwayFromZero);

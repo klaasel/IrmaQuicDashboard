@@ -87,9 +87,6 @@ namespace IrmaQuicDashboard.Logic
             }
 
             var diff = endEntry.Timestamp - startEntry.Timestamp;
-
-            if (diff.Milliseconds < 0)
-                throw new ArithmeticException("Difference should not be negative");
             return diff.TotalSeconds;
         }
 
@@ -100,12 +97,15 @@ namespace IrmaQuicDashboard.Logic
                 // there is something missing, indicate by -1
                 return -1.0;
             }
-            var endEntry = appLogEntries.Single(a => a.Type == endType);
-            var startEntry = serverLogEntries.Single(a => a.Type == startType);
+            var endEntry = appLogEntries.FirstOrDefault(a => a.Type == endType);
+            var startEntry = serverLogEntries.FirstOrDefault(a => a.Type == startType);
             var diff = endEntry.Timestamp - startEntry.Timestamp;
 
-            if (diff.Milliseconds < 0)
-                throw new ArithmeticException("Difference should not be negative");
+            if (endEntry == null || startEntry == null)
+            {
+                // there is something missing, indicate by -1
+                return -1.0;
+            }
             return diff.TotalSeconds;
         }
 

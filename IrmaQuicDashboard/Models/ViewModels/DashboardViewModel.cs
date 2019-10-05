@@ -22,6 +22,19 @@ namespace IrmaQuicDashboard.Models.ViewModels
         [Display(Name = "QUIC as transport? ")]
         public bool UsesQuic { get; set; }
 
+        [Display(Name = "Test amount: ")]
+        public int TestAmount
+        {
+            get
+            {
+                return IrmaSessions.Count;
+            }
+        }
+
+        public string ErrorMessage { get; set; }
+
+        public bool ShowErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
+
         public double AverageNewSessionToRequestIssuance { get; set; }
         public double AverageRespondToSuccess { get; set; }
         public double AverageNewSessionToServerLog { get; set; }
