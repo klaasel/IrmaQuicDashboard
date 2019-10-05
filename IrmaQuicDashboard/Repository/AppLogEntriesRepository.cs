@@ -23,29 +23,42 @@ namespace IrmaQuicDashboard.Repository
             _context = context;
         }
 
-        public SessionUploadMetadata CreateNewUploadSession(DateTime date, string location, string description, bool usesQuic, int sessionNumberUploaded, IFormFile applog)
+        public UploadSession CreateNewUploadSession(DateTime date,
+            string location,
+            string description,
+            bool usesQuic,
+            bool isStationary,
+            bool isWifi,
+            bool isMostly4G,
+            bool isMostly3G,
+            int sessionNumberUploaded,
+            IFormFile applog)
         {
             var success = false;
-            var sessionMetadata = new SessionUploadMetadata()
+            var uploadSession = new UploadSession()
             {
                 Id = Guid.NewGuid(),
                 Date = date,
                 Location = location,
                 Description = description,
                 UsesQuic = usesQuic,
+                IsStationary = isStationary,
+                IsWiFi = isWifi,
+                IsMostly4G = isMostly4G,
+                IsMostly3G = isMostly3G,
                 SessionNumber = sessionNumberUploaded
             };
 
             // save metadata
-            _context.Add(sessionMetadata);
+            _context.Add(uploadSession);
             _context.SaveChanges();
 
             // convert the app log
-            success = ConvertAndSaveAppLog(applog, sessionMetadata.Id);
+            success = ConvertAndSaveAppLog(applog, uploadSession.Id);
 
             // reset the currentIrmaSession
             _currentIrmaSession = null;
-            return sessionMetadata;
+            return uploadSession;
         }
 
         private bool ConvertAndSaveAppLog(IFormFile file, Guid sessionMetadataId)
@@ -163,7 +176,7 @@ namespace IrmaQuicDashboard.Repository
 
             // check the sessionId
             int sessionId = json.sessionId;
-            if (sessionId == 0 || sessionId !=_currentIrmaSession.AppSessionId)
+            if (sessionId == 0 || sessionId != _currentIrmaSession.AppSessionId)
                 return false;
 
             // create the log entry

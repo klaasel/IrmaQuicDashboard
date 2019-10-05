@@ -42,6 +42,10 @@ namespace IrmaQuicDashboard.Controllers
                     model.Location,
                     model.Description,
                     model.UsesQuic,
+                    model.IsStationary,
+                    model.IsWiFi,
+                    model.IsMostly4G,
+                    model.IsMostly3G,
                     model.SessionNumberUploaded,
                     model.AppLog
 

@@ -37,8 +37,13 @@
     }
 
      <div>
-        <label asp-for="TestAmount"></label>
-        @Html.DisplayFor(model => model.TestAmount)
+        <label asp-for="ValidTestAmount"></label>
+        @Html.DisplayFor(model => model.ValidTestAmount)
+    </div>
+
+    <div>
+        <label asp-for="InvalidTestAmount"></label>
+        @Html.DisplayFor(model => model.InvalidTestAmount)
     </div>
 
     @if(Model.ShowErrorMessage)

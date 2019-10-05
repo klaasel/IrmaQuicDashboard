@@ -22,14 +22,17 @@ namespace IrmaQuicDashboard.Models.ViewModels
         [Display(Name = "QUIC as transport? ")]
         public bool UsesQuic { get; set; }
 
-        [Display(Name = "Test amount: ")]
-        public int TestAmount
+        [Display(Name = "Valid test amount: ")]
+        public int ValidTestAmount
         {
             get
             {
                 return IrmaSessions.Count;
             }
         }
+
+        [Display(Name = "Invalid test amount: ")]
+        public int InvalidTestAmount { get; set; }
 
         public string ErrorMessage { get; set; }
 

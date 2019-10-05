@@ -16,6 +16,6 @@ namespace IrmaQuicDashboard.Models
         public DbSet<IrmaAppLogEntry> AppLogEntries { get; set; }
         public DbSet<IrmaServerLogEntry> ServerLogEntries { get; set; }
         public DbSet<TimestampedLocation> TimestampedLocations { get; set; }
-        public DbSet<SessionUploadMetadata> SessionUploadMetadatas { get; set; }
+        public DbSet<UploadSession> UploadSessions { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace IrmaQuicDashboard.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "SessionUploadMetadatas",
+                name: "UploadSessions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -16,11 +16,21 @@ namespace IrmaQuicDashboard.Migrations
                     SessionNumber = table.Column<int>(nullable: false),
                     Location = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    UsesQuic = table.Column<bool>(nullable: false)
+                    UsesQuic = table.Column<bool>(nullable: false),
+                    IsStationary = table.Column<bool>(nullable: false),
+                    IsWiFi = table.Column<bool>(nullable: false),
+                    IsMostly4G = table.Column<bool>(nullable: false),
+                    IsMostly3G = table.Column<bool>(nullable: false),
+                    AverageNewSessionToRequestIssuance = table.Column<double>(nullable: false),
+                    AverageRespondToSuccess = table.Column<double>(nullable: false),
+                    AverageNewSessionToServerLog = table.Column<double>(nullable: false),
+                    AverageServerLogToRequestIssuance = table.Column<double>(nullable: false),
+                    AverageRespondToServerLog = table.Column<double>(nullable: false),
+                    AverageServerLogToSuccess = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SessionUploadMetadatas", x => x.Id);
+                    table.PrimaryKey("PK_UploadSessions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -32,17 +42,18 @@ namespace IrmaQuicDashboard.Migrations
                     AppSessionId = table.Column<int>(nullable: false),
                     SessionToken = table.Column<string>(nullable: true),
                     IrmaJsSessionToken = table.Column<string>(nullable: true),
-                    Timestamp = table.Column<DateTime>(nullable: false)
+                    Timestamp = table.Column<DateTime>(nullable: false),
+                    UploadSessionId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_IrmaSessions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_IrmaSessions_SessionUploadMetadatas_SessionUploadMetadataId",
-                        column: x => x.SessionUploadMetadataId,
-                        principalTable: "SessionUploadMetadatas",
+                        name: "FK_IrmaSessions_UploadSessions_UploadSessionId",
+                        column: x => x.UploadSessionId,
+                        principalTable: "UploadSessions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -112,9 +123,9 @@ namespace IrmaQuicDashboard.Migrations
                 column: "IrmaSessionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IrmaSessions_SessionUploadMetadataId",
+                name: "IX_IrmaSessions_UploadSessionId",
                 table: "IrmaSessions",
-                column: "SessionUploadMetadataId");
+                column: "UploadSessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ServerLogEntries_IrmaSessionId",
@@ -142,7 +153,7 @@ namespace IrmaQuicDashboard.Migrations
                 name: "IrmaSessions");
 
             migrationBuilder.DropTable(
-                name: "SessionUploadMetadatas");
+                name: "UploadSessions");
         }
     }
 }

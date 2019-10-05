@@ -53,14 +53,27 @@ namespace IrmaQuicDashboard.Controllers
             {
                 return PartialView("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, ErrorMessage = e.Message, Stacktrace = e.StackTrace });
             }
-
-            
         }
+
+        public IActionResult GetTotalResult()
+        {
+            try
+            {
+                
+                return PartialView("_TotalResultPartial");
+            }
+            catch (Exception e)
+            {
+                return PartialView("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier, ErrorMessage = e.Message, Stacktrace = e.StackTrace });
+            }
+        }
+
+
 
 
         #region Helpers
 
-        private DashboardViewModel MapUploadSessionToViewModel(SessionUploadMetadata uploadSession)
+        private DashboardViewModel MapUploadSessionToViewModel(UploadSession uploadSession)
         {
             var dashboardVM = new DashboardViewModel();
             dashboardVM.SessionNumber = uploadSession.SessionNumber;
@@ -104,6 +117,7 @@ namespace IrmaQuicDashboard.Controllers
                 dashboardVM.IrmaSessions = filteredIrmaSessionProjection
                 .OrderBy(sessions => sessions.StartTime)
                 .ToList();
+                dashboardVM.InvalidTestAmount = irmaSessionSelection.Count() - dashboardVM.ValidTestAmount;
             }
 
             // calculate averages

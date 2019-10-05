@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IrmaQuicDashboard.Migrations
 {
     [DbContext(typeof(DashboardContext))]
-    [Migration("20190912124950_InitialCreate")]
+    [Migration("20191005214455_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,31 +69,13 @@ namespace IrmaQuicDashboard.Migrations
 
                     b.Property<DateTime>("Timestamp");
 
+                    b.Property<Guid?>("UploadSessionId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("SessionUploadMetadataId");
+                    b.HasIndex("UploadSessionId");
 
                     b.ToTable("IrmaSessions");
-                });
-
-            modelBuilder.Entity("IrmaQuicDashboard.Models.Entities.SessionUploadMetadata", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Location");
-
-                    b.Property<int>("SessionNumber");
-
-                    b.Property<bool>("UsesQuic");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SessionUploadMetadatas");
                 });
 
             modelBuilder.Entity("IrmaQuicDashboard.Models.Entities.TimestampedLocation", b =>
@@ -116,6 +98,46 @@ namespace IrmaQuicDashboard.Migrations
                     b.ToTable("TimestampedLocations");
                 });
 
+            modelBuilder.Entity("IrmaQuicDashboard.Models.Entities.UploadSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<double>("AverageNewSessionToRequestIssuance");
+
+                    b.Property<double>("AverageNewSessionToServerLog");
+
+                    b.Property<double>("AverageRespondToServerLog");
+
+                    b.Property<double>("AverageRespondToSuccess");
+
+                    b.Property<double>("AverageServerLogToRequestIssuance");
+
+                    b.Property<double>("AverageServerLogToSuccess");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsMostly3G");
+
+                    b.Property<bool>("IsMostly4G");
+
+                    b.Property<bool>("IsStationary");
+
+                    b.Property<bool>("IsWiFi");
+
+                    b.Property<string>("Location");
+
+                    b.Property<int>("SessionNumber");
+
+                    b.Property<bool>("UsesQuic");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UploadSessions");
+                });
+
             modelBuilder.Entity("IrmaQuicDashboard.Models.Entities.IrmaAppLogEntry", b =>
                 {
                     b.HasOne("IrmaQuicDashboard.Models.Entities.IrmaSession")
@@ -134,10 +156,9 @@ namespace IrmaQuicDashboard.Migrations
 
             modelBuilder.Entity("IrmaQuicDashboard.Models.Entities.IrmaSession", b =>
                 {
-                    b.HasOne("IrmaQuicDashboard.Models.Entities.SessionUploadMetadata")
+                    b.HasOne("IrmaQuicDashboard.Models.Entities.UploadSession")
                         .WithMany("IrmaSessions")
-                        .HasForeignKey("SessionUploadMetadataId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UploadSessionId");
                 });
 
             modelBuilder.Entity("IrmaQuicDashboard.Models.Entities.TimestampedLocation", b =>

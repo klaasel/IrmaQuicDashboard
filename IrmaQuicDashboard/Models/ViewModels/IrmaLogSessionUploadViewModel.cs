@@ -21,6 +21,14 @@ namespace IrmaQuicDashboard.Models.ViewModels
 
         public bool UsesQuic { get; set; }
 
+        public bool IsStationary { get; set; }
+
+        public bool IsWiFi { get; set; }
+
+        public bool IsMostly4G { get; set; }
+
+        public bool IsMostly3G { get; set; }
+
         [Required]
         public IFormFile AppLog { get; set; }
 

@@ -7,7 +7,16 @@ namespace IrmaQuicDashboard.Repository
 {
     public interface IAppLogEntriesRepository
     {
-        SessionUploadMetadata CreateNewUploadSession(DateTime date, string location, string description, bool usesQuic, int sessionNumberUploaded, IFormFile applog);
+        UploadSession CreateNewUploadSession(DateTime date,
+            string location,
+            string description,
+            bool usesQuic,
+            bool isStationary,
+            bool isWifi,
+            bool isMostly4G,
+            bool isMostly3G,
+            int sessionNumberUploaded,
+            IFormFile applog);
        
     }
 }

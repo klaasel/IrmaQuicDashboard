@@ -6,7 +6,7 @@ namespace IrmaQuicDashboard.Repository
 {
     public interface IDashboardRepository
     {
-        List<SessionUploadMetadata> GetUploadSessions();
-        SessionUploadMetadata GetUploadSession(Guid id);
+        List<UploadSession> GetUploadSessions();
+        UploadSession GetUploadSession(Guid id);
     }
 }

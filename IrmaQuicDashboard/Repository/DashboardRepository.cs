@@ -15,10 +15,10 @@ namespace IrmaQuicDashboard.Repository
             _context = context;
         }
 
-        public SessionUploadMetadata GetUploadSession(Guid id)
+        public UploadSession GetUploadSession(Guid id)
         {
             var session =
-                _context.SessionUploadMetadatas
+                _context.UploadSessions
                     .Include(uploads => uploads.IrmaSessions)
                         .ThenInclude(irmaSession => irmaSession.AppLogEntries)
                     .Include(uploads => uploads.IrmaSessions)
@@ -30,10 +30,10 @@ namespace IrmaQuicDashboard.Repository
             return session;
         }
 
-        public List<SessionUploadMetadata> GetUploadSessions()
+        public List<UploadSession> GetUploadSessions()
         {
             var sessions = _context
-                .SessionUploadMetadatas
+                .UploadSessions
                 .ToList();
             return sessions;
         }
