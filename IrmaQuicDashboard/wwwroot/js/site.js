@@ -14,7 +14,7 @@ $('#btnViewUploadSession').on('click', function (e) {
 
 function GetDashboard(filter) {
     $.ajax({
-        url: '/Dashboard/UploadSession',
+        url: '/Dashboard/LoadSession',
         type: 'POST',
         cache: false,
         async: true,

@@ -41,7 +41,7 @@ namespace IrmaQuicDashboard.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadSession(SessionFilterViewModel filter)
+        public IActionResult LoadSession(SessionFilterViewModel filter)
         {
             try
             {
