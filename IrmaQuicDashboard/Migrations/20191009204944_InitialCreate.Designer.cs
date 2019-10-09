@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IrmaQuicDashboard.Migrations
 {
     [DbContext(typeof(DashboardContext))]
-    [Migration("20191005214455_InitialCreate")]
+    [Migration("20191009204944_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,11 +65,9 @@ namespace IrmaQuicDashboard.Migrations
 
                     b.Property<string>("SessionToken");
 
-                    b.Property<Guid>("SessionUploadMetadataId");
-
                     b.Property<DateTime>("Timestamp");
 
-                    b.Property<Guid?>("UploadSessionId");
+                    b.Property<Guid>("UploadSessionId");
 
                     b.HasKey("Id");
 
@@ -158,7 +156,8 @@ namespace IrmaQuicDashboard.Migrations
                 {
                     b.HasOne("IrmaQuicDashboard.Models.Entities.UploadSession")
                         .WithMany("IrmaSessions")
-                        .HasForeignKey("UploadSessionId");
+                        .HasForeignKey("UploadSessionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("IrmaQuicDashboard.Models.Entities.TimestampedLocation", b =>

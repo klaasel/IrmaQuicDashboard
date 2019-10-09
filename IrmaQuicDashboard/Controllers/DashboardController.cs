@@ -16,9 +16,9 @@ namespace IrmaQuicDashboard.Controllers
 {
     public class DashboardController : Controller
     {
-        private readonly IDashboardRepository _repository;
+        private readonly IUploadSessionRepository _repository;
 
-        public DashboardController(IDashboardRepository repository)
+        public DashboardController(IUploadSessionRepository repository)
         {
             _repository = repository;
         }
@@ -68,9 +68,6 @@ namespace IrmaQuicDashboard.Controllers
             }
         }
 
-
-
-
         #region Helpers
 
         private DashboardViewModel MapUploadSessionToViewModel(UploadSession uploadSession)
@@ -81,6 +78,12 @@ namespace IrmaQuicDashboard.Controllers
             dashboardVM.Location = uploadSession.Location;
             dashboardVM.Description = uploadSession.Description;
             dashboardVM.UsesQuic = uploadSession.UsesQuic;
+            dashboardVM.AverageNewSessionToRequestIssuance = uploadSession.AverageNewSessionToRequestIssuance;
+            dashboardVM.AverageRespondToSuccess = uploadSession.AverageRespondToSuccess;
+            dashboardVM.AverageNewSessionToServerLog = uploadSession.AverageNewSessionToServerLog;
+            dashboardVM.AverageServerLogToRequestIssuance = uploadSession.AverageServerLogToRequestIssuance;
+            dashboardVM.AverageRespondToServerLog = uploadSession.AverageRespondToServerLog;
+            dashboardVM.AverageServerLogToSuccess = uploadSession.AverageServerLogToSuccess;
 
             // calculate fields of IrmaSessions
             var irmaSessionSelection = uploadSession.IrmaSessions.Select
@@ -88,13 +91,13 @@ namespace IrmaQuicDashboard.Controllers
             {
                 AppSessionId = irmaSession.AppSessionId,
                 StartTime = irmaSession.Timestamp.ToLongTimeString(),
-                Location = DashboardLogic.CalculateLocationBasedOnTimestamp(irmaSession.Timestamp, irmaSession.TimestampedLocations),
-                NewSessionToRequestIssuanceDelta = DashboardLogic.CalculateNewSessionToRequestIssuanceDelta(irmaSession.AppLogEntries),
-                RespondToSuccessDelta = DashboardLogic.CalculateRespondToSuccessDelta(irmaSession.AppLogEntries),
-                NewSessionToServerLogDelta = DashboardLogic.CalculateNewSessionToServerLogDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
-                ServerLogToRequestIssuanceDelta = DashboardLogic.CalculateServerLogToRequestIssuanceDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
-                RespondToServerLogDelta = DashboardLogic.CalculateRespondToServerLogDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
-                ServerLogToSuccessDelta = DashboardLogic.CalculateServerLogToSuccessDelta(irmaSession.AppLogEntries, irmaSession.ServerLogEntries),
+                Location = irmaSession.Location,
+                NewSessionToRequestIssuanceDelta = irmaSession.NewSessionToRequestIssuanceDelta,
+                RespondToSuccessDelta = irmaSession.RespondToSuccessDelta,
+                NewSessionToServerLogDelta = irmaSession.NewSessionToServerLogDelta,
+                ServerLogToRequestIssuanceDelta = irmaSession.ServerLogToRequestIssuanceDelta,
+                RespondToServerLogDelta = irmaSession.RespondToServerLogDelta,
+                ServerLogToSuccessDelta = irmaSession.ServerLogToSuccessDelta,
             });
             var filteredIrmaSessionProjection = irmaSessionSelection
                 // filter the projection on criterium: app delta should be more or equal as sum of the corresponding app-server deltas.
@@ -120,14 +123,7 @@ namespace IrmaQuicDashboard.Controllers
                 dashboardVM.InvalidTestAmount = irmaSessionSelection.Count() - dashboardVM.ValidTestAmount;
             }
 
-            // calculate averages
-            dashboardVM.AverageNewSessionToRequestIssuance = Math.Round(dashboardVM.IrmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average(),3, MidpointRounding.AwayFromZero);
-            dashboardVM.AverageRespondToSuccess = Math.Round(dashboardVM.IrmaSessions.Select(i => i.RespondToSuccessDelta).Average(), 3, MidpointRounding.AwayFromZero);
-            dashboardVM.AverageNewSessionToServerLog = Math.Round(dashboardVM.IrmaSessions.Select(i => i.NewSessionToServerLogDelta).Average(), 3, MidpointRounding.AwayFromZero);
-            dashboardVM.AverageServerLogToRequestIssuance = Math.Round(dashboardVM.IrmaSessions.Select(i => i.ServerLogToRequestIssuanceDelta).Average(), 3, MidpointRounding.AwayFromZero);
-            dashboardVM.AverageRespondToServerLog = Math.Round(dashboardVM.IrmaSessions.Select(i => i.RespondToServerLogDelta).Average(), 3, MidpointRounding.AwayFromZero);
-            dashboardVM.AverageServerLogToSuccess = Math.Round(dashboardVM.IrmaSessions.Select(i => i.ServerLogToSuccessDelta).Average(), 3, MidpointRounding.AwayFromZero);
-
+        
             return dashboardVM;
         }
 

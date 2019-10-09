@@ -91,7 +91,7 @@ namespace IrmaQuicDashboard.Repository
 
             // get the corresponding irma session of this upload session and its entries
             var irmaSession = _context.IrmaSessions
-                .Where(sessions => sessions.SessionUploadMetadataId == sessionMetadataId)
+                .Where(sessions => sessions.UploadSessionId == sessionMetadataId)
                 .Include(sessions => sessions.AppLogEntries)
                 .FirstOrDefault(session => session.SessionToken == sessionToken);
 
@@ -102,7 +102,7 @@ namespace IrmaQuicDashboard.Repository
                 Debug.WriteLine("No corresponding irma session found for line: " + line);
                 return true;
             }
-                
+
 
             var successAppLogEntry = irmaSession.AppLogEntries.FirstOrDefault(x => x.Type == AppLogEntryType.Success);
 
@@ -137,7 +137,7 @@ namespace IrmaQuicDashboard.Repository
             if (type == ServerLogEntryType.ServerLogGETIrmaWithToken)
             {
                 // validate if token is the same
-                var sessionToken = line.Between("url=/irma/", "/"); 
+                var sessionToken = line.Between("url=/irma/", "/");
                 if (sessionToken != _currentIrmaSession.SessionToken)
                     return false;
             }
@@ -145,7 +145,7 @@ namespace IrmaQuicDashboard.Repository
             if (type == ServerLogEntryType.ServerLogPOSTCommitments)
             {
                 // validate if token is the same
-                var sessionToken = line.Between("url=/irma/","/commitments");
+                var sessionToken = line.Between("url=/irma/", "/commitments");
                 if (sessionToken != _currentIrmaSession.SessionToken)
                     return false;
             }

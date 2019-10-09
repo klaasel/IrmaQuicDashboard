@@ -39,7 +39,7 @@ namespace IrmaQuicDashboard
             services.AddDbContext<DashboardContext>();
             services.AddScoped(typeof(IAppLogEntriesRepository), typeof(AppLogEntriesRepository));
             services.AddScoped(typeof(IServerLogEntriesRepository), typeof(ServerLogEntriesRepository));
-            services.AddScoped(typeof(IDashboardRepository), typeof(DashboardRepository));
+            services.AddScoped(typeof(IUploadSessionRepository), typeof(UploadSessionRepository));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

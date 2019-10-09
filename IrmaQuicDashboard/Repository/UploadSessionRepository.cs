@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IrmaQuicDashboard.Repository
 {
-    public class DashboardRepository : IDashboardRepository
+    public class UploadSessionRepository : IUploadSessionRepository
     {
         private readonly DashboardContext _context;
-        public DashboardRepository(DashboardContext context)
+        public UploadSessionRepository(DashboardContext context)
         {
             _context = context;
         }
@@ -36,6 +36,13 @@ namespace IrmaQuicDashboard.Repository
                 .UploadSessions
                 .ToList();
             return sessions;
+        }
+
+        public bool UpdateUploadSession(UploadSession uploadSession)
+        {
+            _context.Update(uploadSession);
+            _context.SaveChanges();
+            return true;
         }
     }
 }

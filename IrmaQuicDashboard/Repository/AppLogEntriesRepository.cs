@@ -61,7 +61,7 @@ namespace IrmaQuicDashboard.Repository
             return uploadSession;
         }
 
-        private bool ConvertAndSaveAppLog(IFormFile file, Guid sessionMetadataId)
+        private bool ConvertAndSaveAppLog(IFormFile file, Guid uploadSessionId)
         {
             // because a lot of lines need to be filtered, don't save them in memory but immediately write them to the database
             using (var reader = new StreamReader(file.OpenReadStream()))
@@ -69,7 +69,7 @@ namespace IrmaQuicDashboard.Repository
                 while (reader.Peek() >= 0)
                 {
                     var line = reader.ReadLine();
-                    var success = ProcessAppLogLine(line, sessionMetadataId);
+                    var success = ProcessAppLogLine(line, uploadSessionId);
                     if (!success)
                         throw new LogProcessingException("Processing server log unsuccessful at line: " + line);
                 }
@@ -77,7 +77,7 @@ namespace IrmaQuicDashboard.Repository
             return true;
         }
 
-        private bool ProcessAppLogLine(string line, Guid sessionMetadataId)
+        private bool ProcessAppLogLine(string line, Guid uploadSessionId)
         {
             // only process Position if a session is active
             if (line.Contains("Position") && _currentIrmaSession != null)
@@ -86,7 +86,7 @@ namespace IrmaQuicDashboard.Repository
             }
             if (line.Contains("NewSession"))
             {
-                return ProcessNewIrmaSessionAndLogEntry(line, sessionMetadataId);
+                return ProcessNewIrmaSessionAndLogEntry(line, uploadSessionId);
             }
             if (line.Contains("RequestIssuancePermission"))
             {
@@ -129,7 +129,7 @@ namespace IrmaQuicDashboard.Repository
             return true;
         }
 
-        private bool ProcessNewIrmaSessionAndLogEntry(string line, Guid sessionMetadataId)
+        private bool ProcessNewIrmaSessionAndLogEntry(string line, Guid uploadSessionId)
         {
             // deconstruct line: [<timestamp>]| Sending ..: | JSON object
             var lineParts = line.Split('|');
@@ -141,7 +141,7 @@ namespace IrmaQuicDashboard.Repository
             // create new IrmaSession
             var irmaSession = new IrmaSession();
             irmaSession.Id = Guid.NewGuid();
-            irmaSession.SessionUploadMetadataId = sessionMetadataId;
+            irmaSession.UploadSessionId = uploadSessionId;
             irmaSession.Timestamp = timestamp;
             irmaSession.AppSessionId = json.sessionId;
             irmaSession.SessionToken = sessionToken;

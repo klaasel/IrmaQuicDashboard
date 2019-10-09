@@ -63,11 +63,9 @@ namespace IrmaQuicDashboard.Migrations
 
                     b.Property<string>("SessionToken");
 
-                    b.Property<Guid>("SessionUploadMetadataId");
-
                     b.Property<DateTime>("Timestamp");
 
-                    b.Property<Guid?>("UploadSessionId");
+                    b.Property<Guid>("UploadSessionId");
 
                     b.HasKey("Id");
 
@@ -156,7 +154,8 @@ namespace IrmaQuicDashboard.Migrations
                 {
                     b.HasOne("IrmaQuicDashboard.Models.Entities.UploadSession")
                         .WithMany("IrmaSessions")
-                        .HasForeignKey("UploadSessionId");
+                        .HasForeignKey("UploadSessionId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("IrmaQuicDashboard.Models.Entities.TimestampedLocation", b =>

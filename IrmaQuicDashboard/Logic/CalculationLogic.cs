@@ -6,7 +6,7 @@ using IrmaQuicDashboard.Models.Enums;
 
 namespace IrmaQuicDashboard.Logic
 {
-    public static class DashboardLogic
+    public static class CalculationLogic
     {
         #region AppLog
 
@@ -122,6 +122,21 @@ namespace IrmaQuicDashboard.Logic
             var locs = locations.OrderBy(x => x.Timestamp);
             var latlong = locs.First(l => l.Timestamp >= timestamp);
             return $"{latlong.Latitude.ToString()},{latlong.Longitude.ToString()}";
+        }
+
+        #endregion
+
+        #region Upload session averages
+
+        public static UploadSession CalculateAverages(UploadSession uploadSession, List<IrmaSession> irmaSessions)
+        {
+            uploadSession.AverageNewSessionToRequestIssuance = Math.Round(irmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            uploadSession.AverageRespondToSuccess = Math.Round(irmaSessions.Select(i => i.RespondToSuccessDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            uploadSession.AverageNewSessionToServerLog = Math.Round(irmaSessions.Select(i => i.NewSessionToServerLogDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            uploadSession.AverageServerLogToRequestIssuance = Math.Round(irmaSessions.Select(i => i.ServerLogToRequestIssuanceDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            uploadSession.AverageRespondToServerLog = Math.Round(irmaSessions.Select(i => i.RespondToServerLogDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            uploadSession.AverageServerLogToSuccess = Math.Round(irmaSessions.Select(i => i.ServerLogToSuccessDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            return uploadSession;
         }
 
         #endregion

@@ -38,12 +38,11 @@ namespace IrmaQuicDashboard.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    SessionUploadMetadataId = table.Column<Guid>(nullable: false),
+                    UploadSessionId = table.Column<Guid>(nullable: false),
                     AppSessionId = table.Column<int>(nullable: false),
                     SessionToken = table.Column<string>(nullable: true),
                     IrmaJsSessionToken = table.Column<string>(nullable: true),
-                    Timestamp = table.Column<DateTime>(nullable: false),
-                    UploadSessionId = table.Column<Guid>(nullable: true)
+                    Timestamp = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,7 +52,7 @@ namespace IrmaQuicDashboard.Migrations
                         column: x => x.UploadSessionId,
                         principalTable: "UploadSessions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
