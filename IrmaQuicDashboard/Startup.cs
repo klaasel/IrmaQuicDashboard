@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace IrmaQuicDashboard
 {
@@ -58,8 +60,9 @@ namespace IrmaQuicDashboard
                 // On release, perform migrations
                 using (var context = new DashboardContext())
                 {
-                    // on corrupt data in the database, delete the database
-                    // context.Database.EnsureDeleted();
+                    // on corrupt data in the database or migration is not possible
+                    // because of SQLite limitations, delete the database
+                    //context.Database.EnsureDeleted();
 
                     context.Database.Migrate();
                 }

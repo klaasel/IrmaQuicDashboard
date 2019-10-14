@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace IrmaQuicDashboard.Models.Entities
 {
     /// <summary>
-    /// Metadata provided when uploading a session
+    /// UploadSession contains metadata provided when uploading a session
     /// </summary>
     public class UploadSession
     {

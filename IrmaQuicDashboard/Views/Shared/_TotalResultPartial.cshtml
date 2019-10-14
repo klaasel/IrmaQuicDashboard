@@ -1,5 +1,79 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
 }
+@model IrmaQuicDashboard.Models.ViewModels.TotalResultViewModel
+
+
+<div class="p-1"></div>
+<div class="p-1">
+    <table class="table">
+        <tr>
+            <th></th>
+            <th colspan="3">NewSession - RespondIssuancePermission</th>
+            <th colspan="3">RespondPermission - Success</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th>QUIC</th>
+            <th>HTTP/TLS</th>
+            <th>Diff %</th>
+            <th>QUIC</th>
+            <th>HTTP/TLS</th>
+            <th>Diff %</th>
+        </tr>
+        <tr>
+            <td>WiFi</td>
+            <td>@Model.QuicUsingWiFiNewRip</td>
+            <td>@Model.TLSUsingWiFiNewRip</td>
+            <td>@Model.PercentageDiffUsingWiFiNewRip</td>
+            <td>@Model.QuicUsingWiFiResSuc</td>
+            <td>@Model.TLSUsingWiFiResSuc</td>
+            <td>@Model.PercentageDiffUsingWiFiResSuc</td>
+        </tr>
+        <tr>
+            <td>3G, stationary</td>
+            <td>@Model.QuicUsing3GStationaryNewRip</td>
+            <td>@Model.TLSUsing3GStationaryNewRip</td>
+            <td>@Model.PercentageDiffUsing3GStationaryNewRip</td>
+            <td>@Model.QuicUsing3GStationaryResSuc</td>
+            <td>@Model.TLSUsing3GStationaryResSuc</td>
+            <td>@Model.PercentageDiffUsing3GStationaryResSuc</td>
+        </tr>
+        <tr>
+            <td>4G, moving</td>
+            <td>@Model.QuicUsing4GMovingNewRip</td>
+            <td>@Model.TLSUsing4GMovingNewRip</td>
+            <td>@Model.PercentageDiffUsing4GMovingNewRip</td>
+            <td>@Model.QuicUsing4GMovingResSuc</td>
+            <td>@Model.TLSUsing4GMovingResSuc</td>
+            <td>@Model.PercentageDiffUsing4GMovingResSuc</td>
+        </tr>
+        <tr>
+            <td><b>Averages</b></td>
+            <td><b>@Model.AverageQuicNewRip</b></td>
+            <td><b>@Model.AverageTLSNewRip</b></td>
+            <td><b>@Model.AveragePercentageDiffNewRip</b></td>
+            <td><b>@Model.AverageQuicResSuc</b></td>
+            <td><b>@Model.AverageTLSResSuc</b></td>
+            <td><b>@Model.AveragePercentageDiffResSuc</b></td>
+        </tr>
+        
+       
+    </table>
+    <div class="text-center">
+        <h3>Totals</h3>
+        <div>
+            <label asp-for="TotalAverageQUIC"></label>
+            @Html.DisplayFor(model => model.TotalAverageQUIC)
+        </div>
+        <div>
+            <label asp-for="TotalAverageTLS"></label>
+            @Html.DisplayFor(model => model.TotalAverageTLS)
+        </div>
+        <div>
+            <label asp-for="TotalAveragePercentageDiff"></label>
+            @Html.DisplayFor(model => model.TotalAveragePercentageDiff)
+        </div>
+    </div>
+
+</div>
+<div class="p-1"></div>

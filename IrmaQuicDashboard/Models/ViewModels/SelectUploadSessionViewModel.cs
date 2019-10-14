@@ -9,8 +9,7 @@ namespace IrmaQuicDashboard.Models.ViewModels
     {
         public Guid UploadSessionId { get; set; }
 
-        // WIP: this is for the enum to select the right session
-        // it should be filled with all possible UploadSession
+        // These are all uploaded sessions.
         public List<SelectListItem> SessionSelection { get; set; }
 
 

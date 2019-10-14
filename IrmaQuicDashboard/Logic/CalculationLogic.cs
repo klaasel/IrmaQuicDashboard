@@ -130,13 +130,22 @@ namespace IrmaQuicDashboard.Logic
 
         public static UploadSession CalculateAverages(UploadSession uploadSession, List<IrmaSession> irmaSessions)
         {
-            uploadSession.AverageNewSessionToRequestIssuance = Math.Round(irmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average(), 3, MidpointRounding.AwayFromZero);
-            uploadSession.AverageRespondToSuccess = Math.Round(irmaSessions.Select(i => i.RespondToSuccessDelta).Average(), 3, MidpointRounding.AwayFromZero);
-            uploadSession.AverageNewSessionToServerLog = Math.Round(irmaSessions.Select(i => i.NewSessionToServerLogDelta).Average(), 3, MidpointRounding.AwayFromZero);
-            uploadSession.AverageServerLogToRequestIssuance = Math.Round(irmaSessions.Select(i => i.ServerLogToRequestIssuanceDelta).Average(), 3, MidpointRounding.AwayFromZero);
-            uploadSession.AverageRespondToServerLog = Math.Round(irmaSessions.Select(i => i.RespondToServerLogDelta).Average(), 3, MidpointRounding.AwayFromZero);
-            uploadSession.AverageServerLogToSuccess = Math.Round(irmaSessions.Select(i => i.ServerLogToSuccessDelta).Average(), 3, MidpointRounding.AwayFromZero);
+            uploadSession.AverageNewSessionToRequestIssuance = RoundToThreeDecimals(irmaSessions.Select(i => i.NewSessionToRequestIssuanceDelta).Average());
+            uploadSession.AverageRespondToSuccess = RoundToThreeDecimals(irmaSessions.Select(i => i.RespondToSuccessDelta).Average());
+            uploadSession.AverageNewSessionToServerLog = RoundToThreeDecimals(irmaSessions.Select(i => i.NewSessionToServerLogDelta).Average());
+            uploadSession.AverageServerLogToRequestIssuance = RoundToThreeDecimals(irmaSessions.Select(i => i.ServerLogToRequestIssuanceDelta).Average());
+            uploadSession.AverageRespondToServerLog = RoundToThreeDecimals(irmaSessions.Select(i => i.RespondToServerLogDelta).Average());
+            uploadSession.AverageServerLogToSuccess = RoundToThreeDecimals(irmaSessions.Select(i => i.ServerLogToSuccessDelta).Average());
             return uploadSession;
+        }
+
+        #endregion
+
+        #region Rounding helper
+
+        public static double RoundToThreeDecimals(double value)
+        {
+            return Math.Round(value, 3, MidpointRounding.AwayFromZero);
         }
 
         #endregion

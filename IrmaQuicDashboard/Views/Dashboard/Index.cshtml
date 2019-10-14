@@ -3,22 +3,35 @@
 }
 @model IrmaQuicDashboard.Models.ViewModels.SelectUploadSessionViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Dashboard</h1>
+<div class="text-center vertical-space-medium">
+    <h1 class="display-6">Dashboard</h1>
 </div>
 <div class="d-flex justify-content-between">
     <div class="p-1"></div>
     <div class="p-1">
-        <h3>Choose session:</h3>
-        <form method="get" action="Dashboard">
-            <select id="dropdownSelectSession" asp-for="UploadSessionId" asp-items="@Model.SessionSelection">
-                <option>Please select one</option>
-            </select>
-            <input id="btnViewUploadSession" type="button" class="btn btn-primary" value="View Session" />
-        </form>
+        @if (Model.SessionSelection.Any()) { 
+            <div class="text-center vertical-space-medium">
+                <h4>Choose session:</h4>
+                <form method="post" action="Dashboard">
+                    <select id="dropdownSelectSession" asp-for="UploadSessionId" asp-items="@Model.SessionSelection"></select>
+                    <input id="btnViewUploadSession" type="button" class="btn btn-primary" value="View Session" />
+                </form>
+            </div>
+            <div class="text-center vertical-space-medium">
+                <h4>Or view the result overview:</h4>
+                <form method="get" action="Dashboard">
+                    <input id="btnViewTotalResult" type="button" class="btn btn-primary" value="View Total result" />
+                </form>
+            </div>
+        } else
+        {
+            <p>No sessions uploaded</p>
+        }
     </div>
+     
     <div class="p-1"></div>
 </div>
+<div class="vertical-space-medium"></div>
 <div id="dashboard" class="d-flex justify-content-between"></div>
 
 <script src="~/js/site.js"></script>

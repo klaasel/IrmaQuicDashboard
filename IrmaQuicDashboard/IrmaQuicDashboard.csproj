@@ -27,5 +27,9 @@
     <Folder Include="Logic\" />
     <Folder Include="Views\IrmaSession\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="StaticFiles\messages.HEIC" />
   </ItemGroup>
 </Project>

@@ -6,9 +6,13 @@ $('#btnViewUploadSession').on('click', function (e) {
     var filter = {
         id: $('#dropdownSelectSession').val()
        
-        };
-     
-    GetDashboard(filter)
+    };
+    if (filter !== undefined) 
+        GetDashboard(filter)
+});
+
+$('#btnViewTotalResult').on('click', function (e) {
+    GetTotalResults()
 });
 
 
@@ -26,6 +30,23 @@ function GetDashboard(filter) {
         }
     ).fail(function (xhr) {
         console.log('error : ' + xhr.status + ' - ' + xhr.statusText + ' - ' + xhr.responseText);
+        });
+
+}
+
+function GetTotalResults() {
+    $.ajax({
+        url: '/Dashboard/GetTotalResult',
+        type: 'GET',
+        cache: false,
+        async: true,
+        dataType: "html"
+    })
+        .done(function (result) {
+            $('#dashboard').html(result);
+        }
+        ).fail(function (xhr) {
+            console.log('error : ' + xhr.status + ' - ' + xhr.statusText + ' - ' + xhr.responseText);
         });
 
 }

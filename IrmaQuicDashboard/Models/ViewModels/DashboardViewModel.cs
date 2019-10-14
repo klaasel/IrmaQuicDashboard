@@ -22,6 +22,9 @@ namespace IrmaQuicDashboard.Models.ViewModels
         [Display(Name = "QUIC as transport? ")]
         public bool UsesQuic { get; set; }
 
+        [Display(Name = "Testing mode: ")]
+        public string Testmode { get; set; }
+
         [Display(Name = "Valid test amount: ")]
         public int ValidTestAmount
         {

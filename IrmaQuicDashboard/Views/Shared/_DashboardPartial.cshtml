@@ -3,7 +3,7 @@
 }
 @model IrmaQuicDashboard.Models.ViewModels.DashboardViewModel
 
-<hr />
+
 <div class="p-1"></div>
 <div class="p-1">
     <div>
@@ -35,6 +35,18 @@
             <label>Transport: </label>  <b>HTTP/TLS</b>
         </div>
     }
+
+    
+    <div>
+        <label asp-for="Testmode"></label>
+        @Html.DisplayFor(model => model.Testmode)
+    </div>
+    
+
+    <div>
+        <label asp-for="ValidTestAmount"></label>
+        @Html.DisplayFor(model => model.ValidTestAmount)
+    </div>
 
      <div>
         <label asp-for="ValidTestAmount"></label>
