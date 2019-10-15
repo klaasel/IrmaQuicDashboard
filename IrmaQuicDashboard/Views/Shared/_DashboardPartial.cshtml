@@ -83,7 +83,7 @@
                 <td>
                     @if(!session.Location.Contains("No locations")){
                         var url = "https://www.google.com/maps/search/?api=1&query=" + session.Location;
-                        <a href="@url">@session.Location</a>
+                        <a href="@url" target="_blank">@session.Location</a>
                     }else
                     {
                         @Html.DisplayFor(modelItem => session.Location)
