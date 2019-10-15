@@ -33,8 +33,8 @@ namespace IrmaQuicDashboard.Controllers
                 sessions.Select(session => new SelectListItem()
                 {
                     Value = session.Id.ToString(),
-                    Text = session.Date.ToShortDateString() + ", nr: " +
-                   ", " + session.SessionNumber +
+                    Text = session.Date.ToShortDateString() +
+                    ", nr: " + session.SessionNumber +
                    ", " + (session.UsesQuic ? "QUIC" : " HTTP/TLS")  +
                     ", " + ComposeTestmodeText(session)
                 })
