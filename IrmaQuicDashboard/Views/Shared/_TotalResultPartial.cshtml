@@ -21,40 +21,40 @@
             <th>Diff %</th>
         </tr>
         <tr>
-            <td>WiFi (sec)</td>
-            <td>@Model.QuicUsingWiFiNewRip</td>
-            <td>@Model.TLSUsingWiFiNewRip</td>
-            <td>@Model.PercentageDiffUsingWiFiNewRip</td>
-            <td>@Model.QuicUsingWiFiResSuc</td>
-            <td>@Model.TLSUsingWiFiResSuc</td>
-            <td>@Model.PercentageDiffUsingWiFiResSuc</td>
+            <td>WiFi</td>
+            <td>@Model.QuicUsingWiFiNewRip s</td>
+            <td>@Model.TLSUsingWiFiNewRip s</td>
+            <td>@Model.PercentageDiffUsingWiFiNewRip %</td>
+            <td>@Model.QuicUsingWiFiResSuc s</td>
+            <td>@Model.TLSUsingWiFiResSuc s</td>
+            <td>@Model.PercentageDiffUsingWiFiResSuc %</td>
         </tr>
         <tr>
-            <td>3G, stationary (sec)</td>
-            <td>@Model.QuicUsing3GStationaryNewRip</td>
-            <td>@Model.TLSUsing3GStationaryNewRip</td>
-            <td>@Model.PercentageDiffUsing3GStationaryNewRip</td>
-            <td>@Model.QuicUsing3GStationaryResSuc</td>
-            <td>@Model.TLSUsing3GStationaryResSuc</td>
-            <td>@Model.PercentageDiffUsing3GStationaryResSuc</td>
+            <td>3G, stationary</td>
+            <td>@Model.QuicUsing3GStationaryNewRip s</td>
+            <td>@Model.TLSUsing3GStationaryNewRip s</td>
+            <td>@Model.PercentageDiffUsing3GStationaryNewRip %</td>
+            <td>@Model.QuicUsing3GStationaryResSuc s</td>
+            <td>@Model.TLSUsing3GStationaryResSuc s</td>
+            <td>@Model.PercentageDiffUsing3GStationaryResSuc %</td>
         </tr>
         <tr>
-            <td>4G, moving (sec)</td>
-            <td>@Model.QuicUsing4GMovingNewRip</td>
-            <td>@Model.TLSUsing4GMovingNewRip</td>
-            <td>@Model.PercentageDiffUsing4GMovingNewRip</td>
-            <td>@Model.QuicUsing4GMovingResSuc</td>
-            <td>@Model.TLSUsing4GMovingResSuc</td>
-            <td>@Model.PercentageDiffUsing4GMovingResSuc</td>
+            <td>4G, moving</td>
+            <td>@Model.QuicUsing4GMovingNewRip s</td>
+            <td>@Model.TLSUsing4GMovingNewRip s</td>
+            <td>@Model.PercentageDiffUsing4GMovingNewRip %</td>
+            <td>@Model.QuicUsing4GMovingResSuc s</td>
+            <td>@Model.TLSUsing4GMovingResSuc s</td>
+            <td>@Model.PercentageDiffUsing4GMovingResSuc %</td>
         </tr>
         <tr>
-            <td><b>Averages (sec)</b></td>
-            <td><b>@Model.AverageQuicNewRip</b></td>
-            <td><b>@Model.AverageTLSNewRip</b></td>
-            <td><b>@Model.AveragePercentageDiffNewRip</b></td>
-            <td><b>@Model.AverageQuicResSuc</b></td>
-            <td><b>@Model.AverageTLSResSuc</b></td>
-            <td><b>@Model.AveragePercentageDiffResSuc</b></td>
+            <td><b>Averages</b></td>
+            <td><b>@Model.AverageQuicNewRip s</b></td>
+            <td><b>@Model.AverageTLSNewRip s</b></td>
+            <td><b>@Model.AveragePercentageDiffNewRip %</b></td>
+            <td><b>@Model.AverageQuicResSuc s</b></td>
+            <td><b>@Model.AverageTLSResSuc s</b></td>
+            <td><b>@Model.AveragePercentageDiffResSuc %</b></td>
         </tr>
         
        
@@ -63,15 +63,15 @@
         <h3>Totals</h3>
         <div>
             <label asp-for="TotalAverageQUIC"></label>
-            @Html.DisplayFor(model => model.TotalAverageQUIC)
+            @Html.DisplayFor(model => model.TotalAverageQUIC) s
         </div>
         <div>
             <label asp-for="TotalAverageTLS"></label>
-            @Html.DisplayFor(model => model.TotalAverageTLS)
+            @Html.DisplayFor(model => model.TotalAverageTLS) s
         </div>
         <div>
             <label asp-for="TotalAveragePercentageDiff"></label>
-            @Html.DisplayFor(model => model.TotalAveragePercentageDiff)
+            @Html.DisplayFor(model => model.TotalAveragePercentageDiff) %
         </div>
     </div>
 
