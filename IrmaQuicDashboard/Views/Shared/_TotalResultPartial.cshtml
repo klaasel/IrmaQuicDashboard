@@ -8,8 +8,8 @@
     <table class="table">
         <tr>
             <th></th>
-            <th colspan="3">NewSession - RespondIssuancePermission</th>
-            <th colspan="3">RespondPermission - Success</th>
+            <th colspan="3">NewSession (NEW) - RespondIssuancePermission (RIP)</th>
+            <th colspan="3">RespondPermission (RES) - Success (SUC)</th>
         </tr>
         <tr>
             <th></th>
@@ -21,7 +21,7 @@
             <th>Diff %</th>
         </tr>
         <tr>
-            <td>WiFi</td>
+            <td>WiFi (sec)</td>
             <td>@Model.QuicUsingWiFiNewRip</td>
             <td>@Model.TLSUsingWiFiNewRip</td>
             <td>@Model.PercentageDiffUsingWiFiNewRip</td>
@@ -30,7 +30,7 @@
             <td>@Model.PercentageDiffUsingWiFiResSuc</td>
         </tr>
         <tr>
-            <td>3G, stationary</td>
+            <td>3G, stationary (sec)</td>
             <td>@Model.QuicUsing3GStationaryNewRip</td>
             <td>@Model.TLSUsing3GStationaryNewRip</td>
             <td>@Model.PercentageDiffUsing3GStationaryNewRip</td>
@@ -39,7 +39,7 @@
             <td>@Model.PercentageDiffUsing3GStationaryResSuc</td>
         </tr>
         <tr>
-            <td>4G, moving</td>
+            <td>4G, moving (sec)</td>
             <td>@Model.QuicUsing4GMovingNewRip</td>
             <td>@Model.TLSUsing4GMovingNewRip</td>
             <td>@Model.PercentageDiffUsing4GMovingNewRip</td>
@@ -48,7 +48,7 @@
             <td>@Model.PercentageDiffUsing4GMovingResSuc</td>
         </tr>
         <tr>
-            <td><b>Averages</b></td>
+            <td><b>Averages (sec)</b></td>
             <td><b>@Model.AverageQuicNewRip</b></td>
             <td><b>@Model.AverageTLSNewRip</b></td>
             <td><b>@Model.AveragePercentageDiffNewRip</b></td>

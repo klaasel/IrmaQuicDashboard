@@ -2,12 +2,17 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
+<div class="text-center vertical-space-medium">
     <h1 class="display-6">Welcome to the Irma-Quic Dashboard</h1>
+</div>
+<div>
     <p>This small web application has been developed to provide insight in the performance of QUIC in comparison to HTTP/TLS when implemented in QUIC. Logs are uploaded, processed and saved to a local database, after which you can view the processed logs in the dashboard</p>
     
-    <p>In the dashboard, the results of the tests can be viewed. There is a result view per upload session, containing multiple IRMA sessions and a total result overview. </p>
+    <p>In the dashboard, the results of the tests can be viewed. There is a result view per upload session, containing multiple IRMA sessions and a total result overview. In our tests we performed 3 types of tests: 1) WiFi stationary at home, 2) 3G stationary at home and 3) 4G moving by car. Those 3 testmodes we performed for both QUIC and HTTP/TLS and we tracked and recorded the location in the app by GPS.</p>
 
-    <p><i>TODO explain the terms and show image</i></p>
+    <p>In our tests we analyzed differences in between 2 pairs of messages, which occur when issuing an attribute: <i>NewSession</i> with <i>RespondIssuancePermission</i> and <i>RespondPermission</i> with <i>Success</i>. The first two occur after scanning the QR code is done, the second two occur after the user presses OK to confirm the issuing. These messages are shortened to respectively NEW, RIP, RES and SUC in the session overview. To double check these messages, also the created server logs when these messages occur are processed and compared. Those server logs, which are detailed in the diagram below, are indicated by SERV in the session overview. For example the NEW - SERV is the difference between the start of the NewSession and the arrival of this request on the server, which creates a log with "url=/irma/[sessiontoken] which indicates the arrival of the request on the server. The sum of the 2 differences NEW - SERV and SERV - RIP must not exceed the difference NEW - RIP, if so the result it is discarded, which sometimes happens when a session fails. </p>
+    <p>Note: in the app is also a message issuing the credential, which is the result of the resulting proof (see last TRACE). This message does not contain the session id, and is immediately followed by the Success message which follows, which does have the session id and can relate back to the completed session. Because between the credentials issuing and Success message is only app processing time, we chose to use the Success message to calculate the difference. After all, what matters is the differences between QUIC and HTTP/TLS, so when the Success message is used with QUIC and HTTP/TLS, the QUIC and HTTP/TLS result cancel each other out.</p>
+</div>
+<div class="text-center">
     <img src="https://lh3.googleusercontent.com/sTb3mybJJol8kb3-EBw89juEXNw33R_Hwg_bVy3OTL629z3DMabv9EIiAO2QZsqDm16IJHPrlpymGNtOEB0vm1oUrOYO6wbiWBxfaUNrG-ITOjAzVxVjuhy_cWZ-xx_1VwrEUqNRtEDTUUiRicGT8C8hXNNwj2cTNttYP-76o4EsJIDW68pXjuM57a8OD6O3NnOD4UUlQQv9Dw5nQTcykWHf0uqeXJ_Jiyn2G_QXHKOwI7DWdEjDzqZKFGn9RQs65yzh0nSF4TySlwfhdf_NZh0M7rRZkSNZ3YHbaVCSZe7P5FuaamuLdNWLWnIlgTFG-oPHwlexbcXyVLMfh60GPE6I0xVf099tQzMxWZBhnbfB5uUn5YPhe39jPPAl5iAVabRO2l0FbC2PkTONJOUEdL7rqmYKd7nx4aRp2DSXIksfmEr23yMw0BuHJdczsQwkUc2BRuOd8BGhk0xeey3y_iTL15alpGAbCKcB6fu7ovuziL7UWE8eESmG-8squ0FRyedPwYgqExUTdWeC63YvXoNLegbolRxGGUDYpWEcnb0d3bk-xVgSb2RMGbBRrQhLULEoC0piAGxngNAtJUvfLTA-DP_KhgYFeVoOgK-hci1uxEz1j8VyKaHx7NK0cx4V9d1caalhyHhokNVs9I6vp8qO8xVfD6jvYae6LSfUB-wdyYidlszBdBopK-gIhiNT5P2mgf35UjsLo8rB5qNDARdWH72vBjbDDUxSOYyFmCkKIqXE=w648-h864-no" />
 </div>

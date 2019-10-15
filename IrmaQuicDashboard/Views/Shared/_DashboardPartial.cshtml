@@ -64,12 +64,12 @@
             <th>SessionId</th>
             <th>StartTime</th>
             <th>Location</th>
-            <th>New-Rip</th>
-            <th>Res-Suc</th>
-            <th>New-SERV</th>
+            <th>NEW-RIP</th>
+            <th>RES-SUC</th>
+            <th>NEW-SERV</th>
             <th>SERV-RIP</th>
-            <th>Res-SERV</th>
-            <th>SERV-Suc</th>
+            <th>RES-SERV</th>
+            <th>SERV-SUC</th>
         </tr>
         @foreach (var session in Model.IrmaSessions)
         {
@@ -81,7 +81,13 @@
                     @Html.DisplayFor(modelItem => session.StartTime)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => session.Location)
+                    @if(!session.Location.Contains("No locations")){
+                        var url = "https://www.google.com/maps/search/?api=1&query=" + session.Location;
+                        <a href="@url">@session.Location</a>
+                    }else
+                    {
+                        @Html.DisplayFor(modelItem => session.Location)
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => session.NewSessionToRequestIssuanceDelta)
