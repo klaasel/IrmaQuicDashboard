@@ -12,12 +12,12 @@ namespace IrmaQuicDashboard.Logic
 
         public static double CalculateNewSessionToRequestIssuanceDelta(List<IrmaAppLogEntry> appLogEntries)
         {
-            return CalculateApplogTimestampDelta(appLogEntries, AppLogEntryType.NewSession, AppLogEntryType.RequestIssuancePermission);
+            return RoundToThreeDecimals(CalculateApplogTimestampDelta(appLogEntries, AppLogEntryType.NewSession, AppLogEntryType.RequestIssuancePermission));
         }
 
         public static double CalculateRespondToSuccessDelta(List<IrmaAppLogEntry> appLogEntries)
         {
-            return CalculateApplogTimestampDelta(appLogEntries, AppLogEntryType.RespondPermission, AppLogEntryType.Success);
+            return RoundToThreeDecimals(CalculateApplogTimestampDelta(appLogEntries, AppLogEntryType.RespondPermission, AppLogEntryType.Success));
         }
 
         private static double CalculateApplogTimestampDelta(List<IrmaAppLogEntry> appLogEntries, AppLogEntryType startType, AppLogEntryType endType)
