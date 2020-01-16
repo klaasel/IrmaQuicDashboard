@@ -127,7 +127,7 @@ namespace IrmaQuicDashboard.Models.ViewModels
             }
         }
 
-        [Display(Name = "Average of all HTTP/TLS sessions: ")]
+        [Display(Name = "Average of all TCP/TLS sessions: ")]
         public double TotalAverageTLS
         {
             get

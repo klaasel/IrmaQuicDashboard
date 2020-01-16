@@ -35,7 +35,7 @@ namespace IrmaQuicDashboard.Controllers
                     Value = session.Id.ToString(),
                     Text = session.Date.ToShortDateString() +
                     ", nr: " + session.SessionNumber +
-                   ", " + (session.UsesQuic ? "QUIC" : " HTTP/TLS")  +
+                   ", " + (session.UsesQuic ? "QUIC" : " TCP/TLS")  +
                     ", " + ComposeTestmodeText(session)
                 })
                  .ToList();
