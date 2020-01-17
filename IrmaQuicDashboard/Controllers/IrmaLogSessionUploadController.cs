@@ -60,13 +60,7 @@ namespace IrmaQuicDashboard.Controllers
 
                 // Get the valid irma sessions, calculate the averages from those sessions and save them to the uploadsession
                 var uploadSessionEntity = _uploadSessionRepository.GetUploadSession(uploadSession.Id);
-                var validIrmaSessions = uploadSessionEntity.IrmaSessions.Where(x =>
-                    x.NewSessionToRequestIssuanceDelta >= 0 &&
-                    (x.NewSessionToServerLogDelta + x.ServerLogToRequestIssuanceDelta <= x.NewSessionToRequestIssuanceDelta) &&
-                    x.RespondToSuccessDelta >= 0 &&
-                    (x.RespondToServerLogDelta + x.ServerLogToSuccessDelta <= x.RespondToSuccessDelta)
-                    )
-                    .ToList();
+                var validIrmaSessions = IrmaSessionLogic.FilterValidIrmaSessions(uploadSession.IrmaSessions);
 
                 uploadSessionEntity = CalculationLogic.CalculateAverages(uploadSession, validIrmaSessions);
                 _uploadSessionRepository.UpdateUploadSession(uploadSessionEntity);
